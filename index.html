@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>yourr-ikyy? • STS Math Bento Lab</title>
+<meta name="description" content="Interactive Bento UI learning lab untuk STS Matematika Kelas 10: Eksponen & Logaritma.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
+<script defer src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+:root{
+  --bg:#f4f7fb; --bg-2:#eef4ff; --surface:rgba(255,255,255,.78); --surface-solid:#fff;
+  --surface-2:#f7faff; --text:#10213d; --muted:#65738c; --primary:#3a67ff; --primary-2:#7395ff;
+  --secondary:#12ad78; --amber:#f4a93b; --pink:#ed72b1; --red:#ef6378; --cyan:#2caad8;
+  --line:#dce5f2; --line-strong:#cbd7e8; --shadow:0 18px 50px rgba(35,68,126,.12);
+  --shadow-soft:0 10px 26px rgba(35,68,126,.08); --radius:26px; --radius-sm:17px;
+  --code:#101828; --code-text:#ecf3ff; --success-bg:#effaf5; --success-line:#c4eadb;
+  --warn-bg:#fff8eb; --warn-line:#f5dfad; --danger-bg:#fff1f4; --danger-line:#f5c7d2;
+  --plot-bg:rgba(255,255,255,.84); --grid:#dfe7f2; --axis:#91a0b5;
+}
+html[data-theme="dark"]{
+  --bg:#07101f; --bg-2:#0d1830; --surface:rgba(12,23,43,.78); --surface-solid:#0e1b31;
+  --surface-2:#111f38; --text:#eaf1ff; --muted:#a2aec3; --line:#20324f; --line-strong:#314563;
+  --shadow:0 18px 50px rgba(0,0,0,.33); --shadow-soft:0 12px 28px rgba(0,0,0,.22);
+  --code:#06101e; --code-text:#eaf2ff; --success-bg:#0e2a23; --success-line:#1b5b49;
+  --warn-bg:#2d220e; --warn-line:#705321; --danger-bg:#2d131b; --danger-line:#6e2837;
+  --plot-bg:rgba(10,21,40,.9); --grid:#223653; --axis:#8091ab;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:
+  radial-gradient(circle at 10% 6%,rgba(58,103,255,.16),transparent 27%),
+  radial-gradient(circle at 92% 16%,rgba(18,173,120,.13),transparent 23%),
+  radial-gradient(circle at 60% 75%,rgba(237,114,177,.08),transparent 24%),
+  linear-gradient(180deg,var(--bg),var(--bg-2) 60%,var(--bg));
+transition:background .25s ease,color .25s ease}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.wrap{width:min(1280px,92%);margin-inline:auto}
+.glass{background:var(--surface);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid color-mix(in srgb,var(--line) 88%,transparent);box-shadow:var(--shadow)}
+.card{padding:22px;border-radius:var(--radius)}
+.muted{color:var(--muted)}
+.mini{font-size:.84rem;color:var(--muted);line-height:1.55}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.73rem;font-weight:950;letter-spacing:.15em;text-transform:uppercase;color:var(--primary)}
+.badge{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);font-size:.78rem;font-weight:850}
+.btn{border:1px solid var(--line-strong);background:var(--surface-solid);color:var(--text);padding:10px 13px;border-radius:13px;font-weight:850;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;background-clip:padding-box}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-soft);border-color:color-mix(in srgb,var(--primary) 48%,var(--line))}
+.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn.green{background:var(--secondary);color:#fff;border-color:var(--secondary)}
+.btn.ghost{background:transparent}
+.btn.danger{background:var(--danger-bg);border-color:var(--danger-line)}
+.icon-btn{width:42px;height:42px;display:grid;place-items:center;border:1px solid var(--line);border-radius:13px;background:var(--surface-solid);color:var(--text);font-weight:900}
+header{position:sticky;top:10px;z-index:80;margin:10px auto 0}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:22px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-.045em;white-space:nowrap}
+.brand-mark{width:39px;height:39px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;font-style:italic;box-shadow:0 9px 20px rgba(58,103,255,.28)}
+.nav-right,.navlinks{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.navlinks a{padding:9px 11px;border:1px solid transparent;border-radius:11px;font-size:.86rem;font-weight:800;color:var(--muted)}
+.navlinks a:hover{background:var(--surface-solid);color:var(--text);border-color:var(--line)}
+.hero{padding:36px 0 20px}.hero-grid{display:grid;grid-template-columns:1.5fr .82fr;gap:18px}
+.hero-main{padding:34px;border-radius:32px;position:relative;overflow:hidden;min-height:420px}
+.hero-main h1{font-size:clamp(2.15rem,6.5vw,5.25rem);line-height:.92;letter-spacing:-.075em;margin:7px 0 20px;max-width:10ch}
+.hero-main h1 span{color:var(--primary)}
+.hero-copy{max-width:70ch;color:var(--muted);font-size:1rem;line-height:1.7}
+.hero-actions,.chips,.stat-row,.control-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hero-actions{margin-top:20px}
+.chips{margin-top:20px}.chip{padding:8px 10px;border-radius:999px;background:color-mix(in srgb,var(--primary) 9%,var(--surface-solid));border:1px solid color-mix(in srgb,var(--primary) 18%,var(--line));font-size:.79rem;font-weight:850}
+.hero-orb{position:absolute;width:340px;height:340px;border-radius:50%;right:-100px;bottom:-155px;background:radial-gradient(circle at 34% 32%,#fff 0,rgba(115,149,255,.42) 22%,rgba(58,103,255,0) 70%);filter:blur(4px);pointer-events:none}
+.hero-equation{position:absolute;right:34px;top:34px;width:min(40%,330px);padding:16px;border-radius:20px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);box-shadow:inset 0 1px rgba(255,255,255,.25)}
+[data-theme="dark"] .hero-equation{background:rgba(8,18,34,.45);border-color:rgba(125,158,219,.2)}
+.hero-equation .katex{font-size:1.35rem}
+.dashboard-card{padding:24px;border-radius:30px;display:flex;flex-direction:column;gap:18px;justify-content:space-between}
+.dashboard-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.metric{font-size:3rem;font-weight:950;letter-spacing:-.07em}.progress{height:13px;background:color-mix(in srgb,var(--line) 65%,transparent);border-radius:999px;overflow:hidden}.progress>span{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--primary),var(--secondary));transition:width .5s ease}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr)}.stat{padding:12px;border:1px solid var(--line);background:var(--surface-2);border-radius:16px}.stat b{display:block;font-size:1.05rem}.stat span{font-size:.73rem;color:var(--muted)}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:15px}.section-head h2{margin:0;font-size:1.7rem;letter-spacing:-.045em}.section-head p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin:18px 0}.span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-7{grid-column:span 7}.span-6{grid-column:span 6}.span-5{grid-column:span 5}.span-4{grid-column:span 4}.span-3{grid-column:span 3}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.seg{display:inline-flex;gap:5px;padding:5px;border:1px solid var(--line);background:var(--surface-2);border-radius:14px}.seg button{border:0;background:transparent;padding:8px 11px;border-radius:10px;color:var(--muted);font-weight:850}.seg button.active{background:var(--primary);color:#fff}
+.material-layout{display:grid;grid-template-columns:260px 1fr;gap:18px}.toc{position:sticky;top:96px;align-self:start;padding:15px;border-radius:22px}.toc-title{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;font-weight:950;color:var(--muted);margin-bottom:9px}.toc a{display:block;padding:10px 11px;border-radius:11px;color:var(--muted);font-size:.84rem;font-weight:800}.toc a:hover,.toc a.active{background:var(--surface-solid);color:var(--primary)}
+.material-sections{display:grid;gap:14px}.lesson{padding:20px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(160deg,color-mix(in srgb,var(--surface-solid) 94%,var(--primary) 6%),var(--surface-solid));box-shadow:var(--shadow-soft);scroll-margin-top:110px}
+.lesson-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.lesson-num{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:color-mix(in srgb,var(--primary) 11%,var(--surface-solid));color:var(--primary);font-weight:950}
+.lesson h3{margin:0;font-size:1.25rem;letter-spacing:-.03em}.lesson-desc{margin:5px 0 0;color:var(--muted);line-height:1.55}.lesson-body{margin-top:15px;display:grid;gap:13px}.formula-row{display:flex;gap:8px;flex-wrap:wrap}.formula-pill{padding:10px 13px;border-radius:14px;background:var(--code);color:var(--code-text);border:1px solid rgba(255,255,255,.07);box-shadow:0 8px 18px rgba(0,0,0,.07);position:relative}.formula-pill.copyable{cursor:pointer}.formula-pill.copyable::after{content:"copy";position:absolute;right:8px;top:5px;font-size:.56rem;color:#9db0cb;text-transform:uppercase;letter-spacing:.08em;opacity:0;transition:.18s}.formula-pill.copyable:hover::after{opacity:1}
+.w-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.w-card{padding:11px;border:1px solid var(--line);border-radius:15px;background:var(--surface-2);min-height:98px}.w-card b{display:block;color:var(--primary);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}.w-card span{display:block;color:var(--muted);font-size:.79rem;line-height:1.42}
+.lesson-extra{display:grid;grid-template-columns:1.15fr .85fr;gap:11px}.note-box{padding:14px;border-radius:17px;border:1px solid var(--line);background:var(--surface-2)}.note-box strong{display:block;margin-bottom:6px}.success-box{background:var(--success-bg);border-color:var(--success-line)}.warn-box{background:var(--warn-bg);border-color:var(--warn-line)}.danger-box{background:var(--danger-bg);border-color:var(--danger-line)}
+.small-check{display:flex;gap:9px;align-items:flex-start;padding:12px;border:1px dashed var(--line-strong);border-radius:14px;background:transparent}.small-check input{margin-top:3px;accent-color:var(--primary)}
+.tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.tool{padding:17px;border:1px solid var(--line);border-radius:20px;background:var(--surface-solid);box-shadow:var(--shadow-soft)}.tool h3{margin:0 0 6px}.field{display:flex;gap:8px;flex-wrap:wrap}.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid var(--line-strong);border-radius:12px;background:var(--surface-2);color:var(--text);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 12%,transparent)}.half{flex:1 1 110px}.result{margin-top:9px;min-height:45px;padding:11px 12px;border-radius:14px;background:var(--success-bg);border:1px solid var(--success-line);color:var(--text);line-height:1.5}.result.bad{background:var(--danger-bg);border-color:var(--danger-line)}.result.warm{background:var(--warn-bg);border-color:var(--warn-line)}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.interactive-panel{padding:16px;border:1px solid var(--line);border-radius:20px;background:var(--surface-solid);box-shadow:var(--shadow-soft)}.interactive-panel h3{margin:0 0 7px}.stepper{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.step{width:36px;height:36px;border:1px solid var(--line);background:var(--surface-2);border-radius:11px;font-weight:900}.step.current{background:var(--primary);color:#fff;border-color:var(--primary)}
+.converter{display:grid;grid-template-columns:1fr .65fr 1fr;gap:9px;align-items:center}.converter .middle{display:grid;place-items:center;color:var(--muted);font-weight:900}
+.graph-card{overflow:hidden}.graph-shell{margin-top:12px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--plot-bg)}#plot{height:470px;width:100%}.graph-controls{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.range-wrap{padding:11px;border:1px solid var(--line);border-radius:15px;background:var(--surface-2)}.range-wrap label{display:flex;justify-content:space-between;gap:8px;font-size:.8rem;font-weight:800}.range-wrap input{width:100%;margin-top:5px;accent-color:var(--primary)}.legend-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.legend-chip{display:inline-flex;gap:7px;align-items:center;padding:7px 9px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);font-size:.76rem;font-weight:800}.dot{width:8px;height:8px;border-radius:50%;background:var(--primary)}
+.quiz-layout{display:grid;grid-template-columns:1fr 300px;gap:15px}.quiz-list{display:grid;gap:12px}.q-card{padding:17px;border:1px solid var(--line);background:var(--surface-solid);border-radius:20px}.q-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.q-index{font-size:.72rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-weight:950}.q-points{font-size:.68rem;padding:6px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);font-weight:850}.q-text{font-weight:850;line-height:1.6;margin-bottom:11px}.opts{display:grid;gap:8px}.opt{display:flex;gap:9px;align-items:center;width:100%;text-align:left;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:var(--surface-2);color:var(--text);transition:.17s}.opt:hover{border-color:var(--primary)}.opt.correct{border-color:var(--secondary);background:var(--success-bg)}.opt.wrong{border-color:var(--red);background:var(--danger-bg)}.opt .letter{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-solid);border:1px solid var(--line);font-weight:900}.feedback{margin-top:9px;min-height:22px;font-size:.82rem;font-weight:800;color:var(--muted)}.quiz-side{padding:17px;border:1px solid var(--line);border-radius:22px;background:var(--surface-solid);height:max-content;position:sticky;top:96px}.big-score{font-size:3.5rem;font-weight:950;letter-spacing:-.08em}.score-bar{height:11px;background:var(--surface-2);border-radius:999px;overflow:hidden;border:1px solid var(--line)}.score-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--secondary),var(--primary));transition:.45s}.rank-pill{padding:10px 12px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line);font-weight:900}
+.flash-layout{display:grid;grid-template-columns:1.3fr .7fr;gap:15px}.flash-stage{min-height:350px;perspective:1200px}.flashcard{width:100%;height:100%;min-height:350px}.flash-inner{position:relative;width:100%;height:100%;min-height:350px;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.75,.2,1);cursor:pointer}.flash-stage.flipped .flash-inner{transform:rotateY(180deg)}.face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--line);border-radius:26px;padding:27px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(145deg,var(--surface-solid),color-mix(in srgb,var(--surface-solid) 88%,var(--primary) 12%));box-shadow:var(--shadow)}.back{transform:rotateY(180deg);background:linear-gradient(145deg,var(--surface-solid),color-mix(in srgb,var(--surface-solid) 88%,var(--secondary) 12%))}.flash-term{font-size:2.5rem;font-weight:950;letter-spacing:-.055em}.flash-controls{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:12px;flex-wrap:wrap}.flash-side{display:grid;gap:12px}.memory-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}.meter{height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}.meter span{display:block;height:100%;width:0;background:var(--secondary);transition:.3s}.hotkeys{display:grid;grid-template-columns:1fr 1fr;gap:7px}.key{padding:9px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);font-size:.75rem}.key b{display:block}
+.sheet-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:11px}.search{flex:1;min-width:230px;padding:11px 13px;border:1px solid var(--line-strong);border-radius:14px;background:var(--surface-solid);color:var(--text)}.sheet{overflow:auto;border:1px solid var(--line);border-radius:18px;background:var(--surface-solid)}table{border-collapse:collapse;width:100%;min-width:820px}.sheet th,.sheet td{padding:12px 13px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}.sheet th{background:var(--surface-2);position:sticky;top:0;z-index:2;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}.sheet td:first-child{font-weight:950}.sheet td:nth-child(2){font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.note-layout{display:grid;grid-template-columns:.8fr 1.2fr;gap:14px}.note-area textarea{min-height:160px;resize:vertical}.note-list{display:grid;gap:9px;max-height:310px;overflow:auto}.note-item{padding:11px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}.note-item small{display:block;color:var(--muted);margin-bottom:4px}.note-item p{margin:0;line-height:1.45;font-size:.84rem}
+.timer{display:grid;place-items:center;padding:20px}.timer-ring{width:170px;height:170px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--primary) var(--timer-pct,0%),var(--surface-2) 0);position:relative}.timer-ring::after{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--surface-solid);border:1px solid var(--line)}.timer-time{position:relative;z-index:1;font-size:2.3rem;font-weight:950;letter-spacing:-.06em}.timer-actions{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.footer{margin:22px 0 34px;padding:24px;border-radius:25px}.footer-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}.links{display:flex;gap:8px;flex-wrap:wrap}.links a{padding:9px 11px;border:1px solid var(--line);border-radius:12px;background:var(--surface-solid);font-weight:850;font-size:.82rem}.links a:hover{border-color:var(--primary);transform:translateY(-1px)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,150%);opacity:0;background:#091321;color:#fff;padding:11px 15px;border-radius:14px;box-shadow:0 14px 35px rgba(0,0,0,.25);z-index:120;font-weight:800;transition:.28s}.toast.show{transform:translate(-50%,0);opacity:1}
+.backtop{position:fixed;right:18px;bottom:18px;opacity:0;pointer-events:none;transition:.2s;z-index:70}.backtop.show{opacity:1;pointer-events:auto}
+.hidden{display:none!important}
+@media(max-width:1050px){.hero-grid,.quiz-layout,.flash-layout,.note-layout{grid-template-columns:1fr}.hero-equation{width:300px}.quiz-side{position:static}.material-layout{grid-template-columns:1fr}.toc{position:static;display:flex;gap:7px;overflow:auto}.toc-title{display:none}.toc a{white-space:nowrap}.tools-grid{grid-template-columns:1fr 1fr}.graph-controls{grid-template-columns:repeat(3,1fr)}.w-grid{grid-template-columns:repeat(3,1fr)}.span-8,.span-7,.span-6,.span-5,.span-4,.span-3{grid-column:span 12}}
+@media(max-width:760px){header{top:6px}.nav{align-items:flex-start;flex-direction:column}.nav-right{width:100%;justify-content:space-between}.navlinks{justify-content:flex-start;overflow:auto;width:100%;flex-wrap:nowrap}.navlinks a{white-space:nowrap}.hero{padding-top:26px}.hero-main{padding:24px;min-height:480px}.hero-main h1{font-size:3rem}.hero-equation{position:static;width:auto;margin-top:20px}.tools-grid,.quick-grid{grid-template-columns:1fr}.graph-controls{grid-template-columns:1fr 1fr}.w-grid{grid-template-columns:1fr 1fr}.lesson-extra{grid-template-columns:1fr}.stat-row{grid-template-columns:1fr}.converter{grid-template-columns:1fr}.converter .middle{transform:rotate(90deg)}#plot{height:390px}.footer-grid{grid-template-columns:1fr}}
+@media(max-width:500px){.wrap{width:min(94%,1280px)}.card{padding:16px}.section-head{align-items:flex-start;flex-direction:column}.graph-controls,.w-grid{grid-template-columns:1fr}.flash-term{font-size:1.9rem}.big-score{font-size:2.8rem}.hero-main h1{font-size:2.55rem}}
+
+
+/* === FINAL BUILD: ambient background + study UX === */
+:root{
+  --glass-hi:rgba(255,255,255,.56);--focus:rgba(58,103,255,.18);--maxw:1380px;
+}
+html{background:var(--bg)}
+body{overflow-x:hidden;isolation:isolate;max-width:100%;}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-4;background:
+  linear-gradient(rgba(74,103,157,.055) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(74,103,157,.055) 1px,transparent 1px);
+  background-size:44px 44px;mask-image:linear-gradient(to bottom,black,transparent 88%);}
+html[data-theme="dark"] body::before{background:linear-gradient(rgba(120,151,211,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(120,151,211,.045) 1px,transparent 1px);background-size:44px 44px}
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:-3;overflow:hidden}
+.ambient .orb{position:absolute;border-radius:50%;filter:blur(42px);opacity:.22;mix-blend-mode:multiply;animation:floatOrb 14s ease-in-out infinite alternate}
+html[data-theme="dark"] .ambient .orb{mix-blend-mode:screen;opacity:.16}
+.orb-a{width:380px;height:380px;left:-140px;top:10%;background:#4d6fff}.orb-b{width:420px;height:420px;right:-170px;top:24%;background:#2fbf95;animation-delay:-4s!important}.orb-c{width:330px;height:330px;left:48%;bottom:-150px;background:#ef76b2;animation-delay:-7s!important}.orb-d{width:230px;height:230px;right:18%;bottom:18%;background:#f3ba52;animation-delay:-10s!important}
+@keyframes floatOrb{to{transform:translate3d(30px,-24px,0) scale(1.08)}}
+.ambient-noise{position:absolute;inset:0;opacity:.09;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E")}
+.math-float{position:absolute;color:color-mix(in srgb,var(--primary) 45%,transparent);font-family:Georgia,serif;font-weight:700;opacity:.11;animation:floatText 12s linear infinite;white-space:nowrap}
+.math-float:nth-child(5){left:7%;top:22%;font-size:3rem}.math-float:nth-child(6){right:8%;top:41%;font-size:2.5rem;animation-delay:-3s}.math-float:nth-child(7){left:22%;bottom:9%;font-size:2rem;animation-delay:-6s}.math-float:nth-child(8){right:28%;top:9%;font-size:2rem;animation-delay:-9s}
+@keyframes floatText{0%{transform:translateY(18px) rotate(-2deg)}50%{transform:translateY(-18px) rotate(2deg)}100%{transform:translateY(18px) rotate(-2deg)}}
+.read-progress{position:fixed;left:0;top:0;width:100%;height:3px;background:transparent;z-index:250}.read-progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--secondary),var(--pink));box-shadow:0 0 16px rgba(58,103,255,.45);transition:width .08s linear}
+.pointer-glow{position:fixed;left:var(--mx,50%);top:var(--my,20%);width:260px;height:260px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,color-mix(in srgb,var(--primary) 10%,transparent),transparent 68%);pointer-events:none;z-index:-2;filter:blur(6px)}
+.nav{box-shadow:0 20px 55px rgba(35,68,126,.11),0 1px 0 var(--glass-hi) inset}
+.card,.tool,.interactive-panel,.q-card,.lesson,.flashcard{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.card:hover,.tool:hover,.interactive-panel:hover,.q-card:hover,.lesson:hover{border-color:color-mix(in srgb,var(--primary) 18%,var(--line));}
+.card-lift:hover{transform:translateY(-3px)}
+.zen-mode header,.zen-mode .ambient,.zen-mode .backtop{opacity:0;pointer-events:none}.zen-mode main{max-width:1040px}.zen-mode .hero-main{min-height:340px}.zen-mode .hero-equation,.zen-mode .hero-orb{opacity:.25}.zen-mode .extra-chrome{display:none!important}
+body.compact .card{padding:17px}body.compact .lesson{padding:16px}body.compact .w-card{min-height:78px;padding:9px}body.compact .section-head{margin-bottom:10px}
+.utility-dock{position:fixed;right:18px;bottom:78px;display:grid;gap:8px;z-index:90}.dock-btn{width:46px;height:46px;border:1px solid var(--line);border-radius:15px;background:var(--surface-solid);color:var(--text);box-shadow:var(--shadow-soft);font-weight:950}.dock-btn:hover{transform:translateY(-2px)}
+.kbd{display:inline-flex;align-items:center;justify-content:center;min-width:26px;padding:3px 7px;border:1px solid var(--line);border-bottom-width:2px;border-radius:7px;background:var(--surface-2);font-size:.7rem;font-weight:900;color:var(--muted)}
+.modal-backdrop{position:fixed;inset:0;background:rgba(7,16,31,.46);backdrop-filter:blur(8px);display:grid;place-items:center;z-index:180;padding:20px}.modal{width:min(720px,100%);max-height:min(760px,90vh);overflow:auto;background:var(--surface-solid);border:1px solid var(--line);border-radius:28px;box-shadow:0 30px 90px rgba(0,0,0,.25);padding:22px}.modal-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}.palette-input{width:100%;font-size:1.05rem;padding:13px;border:1px solid var(--line-strong);border-radius:15px;background:var(--surface-2);color:var(--text);outline:none}.palette-results{display:grid;gap:7px;margin-top:10px}.palette-item{padding:12px;border:1px solid var(--line);border-radius:13px;background:var(--surface-2);cursor:pointer}.palette-item:hover,.palette-item.active{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 8%,var(--surface-2))}
+.hero-badges{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}.hero-badges .badge strong{color:var(--primary)}
+.cockpit-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.stat-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.big-mini{font-size:1.65rem;font-weight:950;letter-spacing:-.04em}.goal-track{height:11px;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;overflow:hidden}.goal-track span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--secondary));transition:width .45s ease}.plan-list{display:grid;gap:8px}.plan-item{display:flex;align-items:center;gap:9px;padding:10px 11px;border:1px solid var(--line);background:var(--surface-2);border-radius:13px;font-weight:800}.plan-item input{accent-color:var(--secondary)}
+.trainer-layout{display:grid;grid-template-columns:1fr .85fr;gap:14px}.trainer-card{padding:22px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,var(--surface-solid),color-mix(in srgb,var(--surface-solid) 90%,var(--primary) 10%))}.trainer-problem{font-size:1.2rem;font-weight:950;line-height:1.55}.step-list{display:grid;gap:8px;margin-top:12px}.step-card{padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}.step-card b{color:var(--primary)}
+.speed-grid{display:grid;grid-template-columns:1fr .7fr;gap:14px}.speed-q{min-height:180px;display:grid;align-content:center;gap:12px;text-align:center;padding:22px;border:1px solid var(--line);border-radius:22px;background:var(--surface-solid)}.speed-answer{font-size:1.65rem;font-weight:950}.speed-timer{font-size:3rem;font-weight:950;letter-spacing:-.08em}.speed-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.exam-grid{display:grid;grid-template-columns:1fr 280px;gap:14px}.exam-side{position:sticky;top:96px;align-self:start}.exam-card{padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--surface-solid)}.exam-q{font-size:1.08rem;font-weight:900;line-height:1.6}.exam-options{display:grid;gap:8px;margin-top:12px}.exam-nav{display:flex;gap:7px;justify-content:space-between;align-items:center;margin-top:14px}.exam-dots{display:flex;gap:6px;flex-wrap:wrap}.exam-dot{width:12px;height:12px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line)}.exam-dot.done{background:var(--secondary)}.exam-dot.current{outline:3px solid color-mix(in srgb,var(--primary) 18%,transparent);background:var(--primary)}
+.mistake-list{display:grid;gap:9px}.mistake-item{padding:12px 13px;border:1px solid var(--danger-line);background:var(--danger-bg);border-radius:15px}.mistake-item b{display:block;margin-bottom:4px}.empty-state{padding:24px;border:1px dashed var(--line-strong);border-radius:18px;text-align:center;color:var(--muted)}
+.match-board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.match-card{min-height:100px;border:1px solid var(--line);border-radius:18px;background:var(--surface-2);display:grid;place-items:center;padding:10px;text-align:center;font-weight:900;cursor:pointer;transform-style:preserve-3d;transition:.25s}.match-card:hover{border-color:var(--primary)}.match-card.revealed{background:var(--surface-solid);border-color:var(--primary)}.match-card.matched{background:var(--success-bg);border-color:var(--success-line);cursor:default}.match-card .match-content{visibility:hidden}.match-card.revealed .match-content,.match-card.matched .match-content{visibility:visible}
+.flash-stage{user-select:none}.flash-stage{transform-style:preserve-3d}.flash-inner{will-change:transform}.flash-stage .flash-inner:hover{transform:translateY(-3px) scale(1.003)}.flash-stage.flipped .flash-inner:hover{transform:rotateY(180deg) translateY(-3px) scale(1.003)}.flash-stage:focus-visible{outline:4px solid color-mix(in srgb,var(--primary) 22%,transparent);outline-offset:4px}.flash-meta{display:flex;justify-content:space-between;gap:8px;align-items:center}.mastery-pill{padding:7px 9px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);font-size:.72rem;font-weight:900}.flash-navline{display:flex;gap:7px;align-items:center;justify-content:center;margin-top:8px}.flash-navline .dotnav{width:8px;height:8px;border-radius:50%;border:0;background:var(--line-strong)}.flash-navline .dotnav.active{background:var(--primary);transform:scale(1.2)}
+.reading-card{display:grid;grid-template-columns:1fr .7fr;gap:14px}.reading-steps{display:grid;gap:9px}.reading-step{padding:12px 13px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}.reading-step b{color:var(--primary)}
+@media(max-width:1050px){.cockpit-grid,.trainer-layout,.speed-grid,.exam-grid,.reading-card{grid-template-columns:1fr}.stat-grid-4{grid-template-columns:repeat(2,1fr)}.exam-side{position:static}.modal-grid{grid-template-columns:1fr}.match-board{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.utility-dock{right:10px;bottom:72px}.stat-grid-4{grid-template-columns:1fr 1fr}.match-board{grid-template-columns:repeat(2,1fr)}.hero-badges{gap:6px}.dock-btn{width:42px;height:42px}.speed-timer{font-size:2.4rem}}
+
+</style>
+</head>
+<body>
+
+<div class="read-progress"><span id="readProgress"></span></div>
+<div class="ambient" aria-hidden="true">
+  <div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div><div class="orb orb-d"></div>
+  <div class="ambient-noise"></div>
+  <div class="math-float">a^x</div><div class="math-float">logₐ x</div><div class="math-float">√n</div><div class="math-float">Σ</div>
+</div><div class="pointer-glow" aria-hidden="true"></div>
+
+<header class="wrap">
+  <div class="nav glass">
+    <a href="#top" class="brand"><span class="brand-mark">y?</span><span>yourr-ikyy?</span></a>
+    <div class="nav-right">
+      <nav class="navlinks">
+        <a href="#materi">Materi</a><a href="#lab">Lab</a><a href="#graph">Graph</a><a href="#quiz">Quiz</a><a href="#flash">Flash</a><a href="#trainer">Trainer</a><a href="#exam">Exam</a><a href="#cheat">Cheat</a>
+      </nav>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">☾</button><button class="icon-btn" id="paletteBtn" aria-label="Open command palette">⌘</button><button class="icon-btn" id="helpBtn" aria-label="Keyboard shortcuts">?</button>
+    </div>
+  </div>
+</header>
+
+<main id="top" class="wrap">
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-main glass">
+      <div class="eyebrow">STS MATEMATIKA KELAS 10 · BENTO STUDY LAB</div>
+      <h1>Eksponen × Logaritma, <span>gw bkin ezet</span></h1>
+      <p class="hero-copy">Satu dashboard untuk memahami kisi-kisi, melihat hubungan eksponen dan logaritma, bereksperimen dengan rumus, mengulang flashcard, menaklukkan quiz, dan nyimpen progres di browser. Penjelasan inti dibuat dengan struktur <b>5W-1H</b> supaya kamu tahu bukan cuma “apa rumusnya”, tapi juga kapan dan bagaimana memakainya.</p>
+      <div class="chips"><span class="chip">KaTeX Auto Render</span><span class="chip">Plotly Graph</span><span class="chip">Dark Mode</span><span class="chip">Local Progress</span><span class="chip">Keyboard Study</span></div><div class="hero-badges"><span class="badge"><strong id="heroStreak">0</strong> day streak</span><span class="badge"><strong id="heroSessions">0</strong> sessions</span><span class="badge"><strong id="heroMastery">0%</strong> mastery</span><span class="badge">Ctrl/⌘ K quick jump</span></div>
+      <div class="hero-actions">
+        <a class="btn primary" href="#materi">Mulai Belajar →</a>
+        <button class="btn" id="focusScroll">Zen Mode</button>
+        <button class="btn" id="surpriseBtn">Surprise Me</button>
+      </div>
+      <div class="hero-equation">\[a^b=c\iff \log_a(c)=b\]</div>
+      <div class="hero-orb"></div>
+    </div>
+    <aside class="dashboard-card glass">
+      <div>
+        <div class="dashboard-head"><div><div class="eyebrow">STUDY DASHBOARD</div><div class="metric" id="progressMetric">0%</div></div><span class="badge" id="themeLabel">LIGHT</span></div>
+        <p class="mini" id="welcomeText">Dashboard ini menghitung latihan, flashcard, checkpoint, dan quiz score.</p>
+        <div class="progress"><span id="progressBar"></span></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><b id="bestScore">0/10</b><span>Best Quiz</span></div>
+        <div class="stat"><b id="flashKnown">0/20</b><span>Known Cards</span></div>
+        <div class="stat"><b id="checksDone">0/8</b><span>Checkpoints</span></div>
+      </div>
+      <div class="control-row"><button class="btn green" id="saveName">Set nama</button><button class="btn danger" id="resetAll">Reset data</button></div>
+    </aside>
+  </div>
+</section>
+
+<section id="materi" class="bento">
+  <div class="card glass span-12">
+    <div class="section-head"><div><h2>📚 Materi Utama</h2><p>Delapan section berdiri sendiri, bukan dropdown. Semua topik kisi-kisi tetap terlihat dan bisa dipelajari berurutan.</p></div><div class="toolbar"><div class="seg"><button class="filter active" data-filter="all">Semua</button><button class="filter" data-filter="expo">Eksponen</button><button class="filter" data-filter="log">Logaritma</button></div></div></div>
+    <div class="material-layout">
+      <aside class="toc"><div class="toc-title">Jump to</div><a href="#lesson-1">01 Operasi Pangkat</a><a href="#lesson-2">02 Persamaan Eksponen</a><a href="#lesson-3">03 Kontekstual Eksponen</a><a href="#lesson-4">04 Eksponen ↔ Log</a><a href="#lesson-5">05 Sifat Log</a><a href="#lesson-6">06 Log dalam Variabel</a><a href="#lesson-7">07 Persamaan Log</a><a href="#lesson-8">08 Kontekstual Log</a></aside>
+      <div class="material-sections" id="lessonList">
+        <article class="lesson" id="lesson-1" data-kind="expo">
+          <div class="lesson-top"><div><span class="badge">EKSPONEN · 01</span><h3>Operasi Bilangan Berpangkat</h3><p class="lesson-desc">Perkalian, pembagian, pangkat bertingkat, akar, sampai bentuk campuran.</p></div><div class="lesson-num">01</div></div>
+          <div class="lesson-body">
+            <div class="formula-row"><span class="formula-pill copyable">\(a^m\cdot a^n=a^{m+n}\)</span><span class="formula-pill copyable">\(\frac{a^m}{a^n}=a^{m-n}\)</span><span class="formula-pill copyable">\((a^m)^n=a^{mn}\)</span><span class="formula-pill copyable">\(\sqrt[n]{a^m}=a^{m/n}\)</span></div>
+            <div class="w-grid">
+              <div class="w-card"><b>What</b><span>Aturan untuk menyederhanakan bentuk berpangkat.</span></div><div class="w-card"><b>Why</b><span>Agar ekspresi rumit menjadi bentuk yang lebih ringkas.</span></div><div class="w-card"><b>Who</b><span>Siapa pun yang mengolah bilangan atau aljabar berpangkat.</span></div><div class="w-card"><b>When</b><span>Saat basis sama, pangkat bertingkat, atau ada akar.</span></div><div class="w-card"><b>Where</b><span>Aljabar, sains, teknik, dan model pertumbuhan.</span></div><div class="w-card"><b>How</b><span>Kenali pola operasinya lalu terapkan sifat yang tepat.</span></div>
+            </div>
+            <div class="lesson-extra"><div class="note-box success-box"><strong>Contoh cepat</strong> \(2^3\cdot2^4=2^7=128\). Untuk akar, \(\sqrt{27}=\sqrt{9\cdot3}=3\sqrt3\).</div><div class="note-box warn-box"><strong>Jebakan</strong> \(a^m+a^n\) <b>bukan</b> \(a^{m+n}\). Sifat penjumlahan pangkat ini hanya untuk perkalian basis sama.</div></div>
+            <label class="small-check"><input type="checkbox" class="checkpoint" data-check="1"> <span><b>Checkpoint:</b> aku bisa membedakan kapan pangkat dijumlahkan, dikurangkan, atau dikalikan.</span></label>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-2" data-kind="expo">
+          <div class="lesson-top"><div><span class="badge">EKSPONEN · 02</span><h3>Menentukan Nilai Variabel dari Persamaan Eksponen</h3><p class="lesson-desc">Cari \(x\) dengan menyamakan basis atau mengubah bentuk ke logaritma.</p></div><div class="lesson-num">02</div></div>
+          <div class="lesson-body">
+            <div class="formula-row"><span class="formula-pill copyable">\(a^{f(x)}=a^{g(x)}\Rightarrow f(x)=g(x)\)</span><span class="formula-pill copyable">\(a^{f(x)}=b\Rightarrow f(x)=\log_a b\)</span></div>
+            <div class="w-grid"><div class="w-card"><b>What</b><span>Persamaan yang variabelnya berada di pangkat.</span></div><div class="w-card"><b>Why</b><span>Untuk menemukan nilai yang membuat dua ruas bernilai sama.</span></div><div class="w-card"><b>Who</b><span>Penyelesai persamaan eksponen.</span></div><div class="w-card"><b>When</b><span>Saat pangkat belum diketahui dan bentuk dapat diseragamkan.</span></div><div class="w-card"><b>Where</b><span>Pertumbuhan, bunga, skala, dan soal aljabar.</span></div><div class="w-card"><b>How</b><span>Ubah ke basis sama → samakan pangkat → cek hasil.</span></div></div>
+            <div class="lesson-extra"><div class="note-box success-box"><strong>Contoh</strong> \(2^{x+1}=8=2^3\), jadi \(x+1=3\Rightarrow x=2\).</div><div class="note-box"><strong>Strategi</strong> Kalau basis tidak mudah disamakan, gunakan definisi logaritma: \(a^x=b\Rightarrow x=\log_a b\).</div></div>
+            <label class="small-check"><input type="checkbox" class="checkpoint" data-check="2"> <span><b>Checkpoint:</b> aku tahu kapan harus menyamakan basis dan kapan memakai logaritma.</span></label>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-3" data-kind="expo">
+          <div class="lesson-top"><div><span class="badge">EKSPONEN · 03</span><h3>Masalah Kontekstual Eksponen</h3><p class="lesson-desc">Pertumbuhan dan pelipatan berulang dengan model faktor tetap.</p></div><div class="lesson-num">03</div></div>
+          <div class="lesson-body">
+            <div class="formula-row"><span class="formula-pill copyable">\(A=A_0r^t\)</span><span class="formula-pill copyable">\(r=1+p\)</span><span class="formula-pill copyable">\(r=1-p\)</span></div>
+            <div class="w-grid"><div class="w-card"><b>What</b><span>Model yang memakai faktor pengali setiap periode.</span></div><div class="w-card"><b>Why</b><span>Karena perubahan berlangsung dengan rasio relatif yang tetap.</span></div><div class="w-card"><b>Who</b><span>Siswa, peneliti, analis, dan orang yang memodelkan pertumbuhan.</span></div><div class="w-card"><b>When</b><span>Saat jumlah bertambah atau berkurang berulang kali.</span></div><div class="w-card"><b>Where</b><span>Populasi, tabungan, teknologi, produksi, bakteri.</span></div><div class="w-card"><b>How</b><span>Tentukan nilai awal, faktor, dan banyak periode.</span></div></div>
+            <div class="lesson-extra"><div class="note-box success-box"><strong>Contoh</strong> 500 menjadi dua kali lipat tiap jam → \(A=500\cdot2^t\).</div><div class="note-box warn-box"><strong>Jebakan</strong> “Naik 20%” berarti dikali \(1.2\), bukan ditambah 20 tiap periode.</div></div>
+            <label class="small-check"><input type="checkbox" class="checkpoint" data-check="3"> <span><b>Checkpoint:</b> aku bisa menerjemahkan cerita pertumbuhan menjadi model eksponen.</span></label>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-4" data-kind="log">
+          <div class="lesson-top"><div><span class="badge">LOGARITMA · 04</span><h3>Mengubah Bentuk Eksponen ke Logaritma dan Sebaliknya</h3><p class="lesson-desc">Anggap logaritma sebagai “pangkat berapa?” dari sebuah basis.</p></div><div class="lesson-num">04</div></div>
+          <div class="lesson-body">
+            <div class="formula-row"><span class="formula-pill copyable">\(a^b=c\Longleftrightarrow\log_a c=b\)</span></div>
+            <div class="w-grid"><div class="w-card"><b>What</b><span>Logaritma adalah bentuk invers dari eksponen.</span></div><div class="w-card"><b>Why</b><span>Untuk mencari pangkat yang menghasilkan suatu nilai.</span></div><div class="w-card"><b>Who</b><span>Siapa pun yang perlu membalik hubungan eksponensial.</span></div><div class="w-card"><b>When</b><span>Saat variabel atau yang dicari berada di posisi pangkat.</span></div><div class="w-card"><b>Where</b><span>Aljabar, sains, teknik, dan skala logaritmik.</span></div><div class="w-card"><b>How</b><span>Baca \(a^b=c\) sebagai “\(a\) pangkat berapa menjadi \(c\)?”.</span></div></div>
+            <div class="lesson-extra"><div class="note-box success-box"><strong>Contoh</strong> \(2^5=32\Longleftrightarrow\log_2 32=5\).</div><div class="note-box"><strong>Visual mental</strong> Eksponen menjawab “hasilnya berapa?”, logaritma menjawab “pangkatnya berapa?”.</div></div>
+            <label class="small-check"><input type="checkbox" class="checkpoint" data-check="4"> <span><b>Checkpoint:</b> aku bisa bolak-balik mengubah bentuk eksponen ↔ logaritma.</span></label>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-5" data-kind="log">
+          <div class="lesson-top"><div><span class="badge">LOGARITMA · 05</span><h3>Menghitung Nilai Logaritma Menggunakan Sifat-sifatnya</h3><p class="lesson-desc">Perkalian, pembagian, dan pangkat berubah menjadi operasi yang lebih sederhana.</p></div><div class="lesson-num">05</div></div>
+          <div class="lesson-body">
+            <div class="formula-row"><span class="formula-pill copyable">\(\log_a(MN)=\log_aM+\log_aN\)</span><span class="formula-pill copyable">\(\log_a\frac MN=\log_aM-\log_aN\)</span><span class="formula-pill copyable">\(\log_a(M^k)=k\log_aM\)</span></div>
+            <div class="w-grid"><div class="w-card"><b>What</b><span>Aturan untuk memecah atau menggabungkan bentuk log.</span></div><div class="w-card"><b>Why</b><span>Supaya operasi log dapat dihitung dari nilai yang dikenal.</span></div><div class="w-card"><b>Who</b><span>Penyelesai operasi logaritma.</span></div><div class="w-card"><b>When</b><span>Saat argumen berupa perkalian, pembagian, atau pangkat.</span></div><div class="w-card"><b>Where</b><span>Soal aljabar dan model skala logaritmik.</span></div><div class="w-card"><b>How</b><span>Cocokkan pola → pecah/gabung → substitusi nilai log yang diketahui.</span></div></div>
+            <div class="lesson-extra"><div class="note-box success-box"><strong>Contoh</strong> \(\log_3 27+\log_3\sqrt3=3+\frac12=\frac72\).</div><div class="note-box warn-box"><strong>Ingat</strong> Perkalian → tambah. Pembagian → kurang. Pangkat → turun menjadi koefisien.</div></div>
+            <label class="small-check"><input type="checkbox" class="checkpoint" data-check="5"> <span><b>Checkpoint:</b> aku bisa memilih sifat log yang sesuai dengan bentuk soal.</span></label>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-6" data-kind="log">
+          <div class="lesson-top"><div><span class="badge">LOGARITMA · 06</span><h3>Menyatakan Logaritma dalam Variabel Tertentu</h3><p class="lesson-desc">Pakai substitusi dan perubahan basis supaya semuanya bisa ditulis dalam variabel yang sama.</p></div><div class="lesson-num">06</div></div>
+          <div class="lesson-body">
+            <div class="formula-row"><span class="formula-pill copyable">\(\log_a b=\frac{\log_c b}{\log_c a}\)</span><span class="formula-pill copyable">\(\log(a^k)=k\log a\)</span></div>
+            <div class="w-grid"><div class="w-card"><b>What</b><span>Menyatakan nilai log menggunakan variabel yang tersedia.</span></div><div class="w-card"><b>Why</b><span>Agar hubungan antar-log menjadi bentuk aljabar yang bisa dihitung.</span></div><div class="w-card"><b>Who</b><span>Pengolah bentuk aljabar-logaritmik.</span></div><div class="w-card"><b>When</b><span>Saat soal memberikan nilai log tertentu, misalnya \(\log2=p\).</span></div><div class="w-card"><b>Where</b><span>Manipulasi aljabar dan soal bentuk variabel.</span></div><div class="w-card"><b>How</b><span>Faktorkan bilangan/pangkat lalu tarik koefisien dengan sifat log.</span></div></div>
+            <div class="lesson-extra"><div class="note-box success-box"><strong>Contoh</strong> Jika \(\log2=p\), maka \(\log8=\log(2^3)=3p\).</div><div class="note-box"><strong>Teknik</strong> Saat basis mengganggu, gunakan perubahan basis agar seluruh log memakai basis yang sama.</div></div>
+            <label class="small-check"><input type="checkbox" class="checkpoint" data-check="6"> <span><b>Checkpoint:</b> aku bisa mengubah log menjadi ekspresi dalam variabel yang diketahui.</span></label>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-7" data-kind="log">
+          <div class="lesson-top"><div><span class="badge">LOGARITMA · 07</span><h3>Menentukan Penyelesaian Persamaan Logaritma</h3><p class="lesson-desc">Penyelesaian harus memperhatikan syarat domain argumen logaritma.</p></div><div class="lesson-num">07</div></div>
+          <div class="lesson-body">
+            <div class="formula-row"><span class="formula-pill copyable">\(\log_a f(x)=\log_a g(x)\Rightarrow f(x)=g(x)\)</span><span class="formula-pill copyable">\(f(x)>0\)</span><span class="formula-pill copyable">\(a>0,\ a\ne1\)</span></div>
+            <div class="w-grid"><div class="w-card"><b>What</b><span>Persamaan yang memuat logaritma dan variabel.</span></div><div class="w-card"><b>Why</b><span>Karena tidak semua nilai \(x\) valid sebagai argumen log.</span></div><div class="w-card"><b>Who</b><span>Penyelesai persamaan logaritma.</span></div><div class="w-card"><b>When</b><span>Saat variabel berada pada argumen atau bagian bentuk log.</span></div><div class="w-card"><b>Where</b><span>Aljabar dan model berbasis skala logaritmik.</span></div><div class="w-card"><b>How</b><span>Cek domain → sederhanakan → selesaikan → substitusi balik.</span></div></div>
+            <div class="lesson-extra"><div class="note-box success-box"><strong>Contoh</strong> \(\log_2(x-1)=3\Rightarrow x-1=8\Rightarrow x=9\), dan domain \(x>1\) terpenuhi.</div><div class="note-box danger-box"><strong>Jangan skip</strong> Solusi aljabar yang membuat argumen \(\le0\) harus dibuang karena tidak terdefinisi pada logaritma real.</div></div>
+            <label class="small-check"><input type="checkbox" class="checkpoint" data-check="7"> <span><b>Checkpoint:</b> aku selalu mengecek syarat domain setelah memperoleh kandidat solusi.</span></label>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-8" data-kind="log">
+          <div class="lesson-top"><div><span class="badge">LOGARITMA · 08</span><h3>Masalah Kontekstual Logaritma</h3><p class="lesson-desc">Skala log membantu mewakili besaran yang berubah sangat lebar.</p></div><div class="lesson-num">08</div></div>
+          <div class="lesson-body">
+            <div class="formula-row"><span class="formula-pill copyable">\(pH=-\log[H^+]\)</span><span class="formula-pill copyable">\(L=10\log_{10}\frac{I}{I_0}\)</span></div>
+            <div class="w-grid"><div class="w-card"><b>What</b><span>Model yang memakai logaritma untuk mengubah rasio menjadi skala.</span></div><div class="w-card"><b>Why</b><span>Agar perubahan besar dapat dibaca pada skala yang lebih ringkas.</span></div><div class="w-card"><b>Who</b><span>Ilmuwan, insinyur, analis data, dan pelajar.</span></div><div class="w-card"><b>When</b><span>Saat besaran dapat berbeda beberapa orde magnitudo.</span></div><div class="w-card"><b>Where</b><span>Kimia, suara, gempa, data ilmiah.</span></div><div class="w-card"><b>How</b><span>Tentukan model → masukkan nilai → hitung → interpretasikan satuan/skala.</span></div></div>
+            <div class="lesson-extra"><div class="note-box success-box"><strong>Contoh konsep</strong> Kenaikan 1 tingkat pH berarti konsentrasi \(H^+\) berbeda dengan faktor 10.</div><div class="note-box"><strong>Fokus soal cerita</strong> Jangan buru-buru menghitung. Cari dulu “apa yang menjadi basis, apa yang menjadi argumen, dan apa yang dicari”.</div></div>
+            <label class="small-check"><input type="checkbox" class="checkpoint" data-check="8"> <span><b>Checkpoint:</b> aku bisa menerjemahkan cerita menjadi model logaritmik dan menjelaskan maknanya.</span></label>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="lab" class="bento">
+  <div class="card glass span-12">
+    <div class="section-head"><div><h2>🧪 Math Lab</h2><p>Input angka → lihat konsepnya berubah langsung. Cocok buat uji pemahaman tanpa coret-coret 48 halaman.</p></div></div>
+    <div class="tools-grid">
+      <div class="tool"><h3>⚡ Product Powers</h3><p class="mini">Sifat \(a^m\cdot a^n=a^{m+n}\).</p><div class="field"><input id="lb" class="half" type="number" value="2" min="0.0001" step="any"><input id="lm" class="half" type="number" value="3" step="1"><input id="ln" class="half" type="number" value="4" step="1"></div><button class="btn primary" id="calcPower" style="margin-top:8px">Hitung</button><div class="result" id="powerResult"></div></div>
+      <div class="tool"><h3>🔢 Log Calculator</h3><p class="mini">Hitung \(\log_a b\) dengan perubahan basis.</p><div class="field"><input id="logBase" class="half" type="number" value="3" min="0.0001" step="any"><input id="logVal" class="half" type="number" value="27" min="0.0001" step="any"></div><button class="btn primary" id="calcLog" style="margin-top:8px">Hitung</button><div class="result" id="logResult"></div></div>
+      <div class="tool"><h3>🧩 Equation Solver</h3><p class="mini">Model \(a^{x+b}=c\).</p><div class="field"><input id="eqBase" class="half" type="number" value="2" min="0.0001" step="any"><input id="eqShift" class="half" type="number" value="1" step="any"><input id="eqTarget" class="half" type="number" value="8" min="0.0001" step="any"></div><button class="btn primary" id="calcEq" style="margin-top:8px">Solve x</button><div class="result" id="eqResult"></div></div>
+      <div class="tool"><h3>🧮 Root Splitter</h3><p class="mini">Pecah \(\sqrt n\) menjadi \(k\sqrt r\).</p><div class="field"><input id="rootN" type="number" value="72" min="0" step="1"></div><button class="btn primary" id="calcRoot" style="margin-top:8px">Simplify</button><div class="result" id="rootResult"></div></div>
+    </div>
+  </div>
+  <div class="card glass span-7">
+    <div class="section-head"><div><h2>🔁 Exponent ↔ Log Converter</h2><p>Masukkan tiga elemen. Elemen keempat dibentuk otomatis.</p></div></div>
+    <div class="converter"><div class="interactive-panel"><label class="mini">Basis \(a\)</label><input id="convA" class="field" type="number" value="2" min="0.0001" step="any"></div><div class="middle">↔</div><div class="interactive-panel"><label class="mini">Pangkat \(b\)</label><input id="convB" type="number" value="5" step="any"></div></div>
+    <div class="note-box" style="margin-top:10px"><div class="eyebrow">HASIL</div><div id="convOutput" style="font-size:1.05rem;font-weight:900;margin-top:6px"></div></div>
+  </div>
+  <div class="card glass span-5">
+    <div class="section-head"><div><h2>🎲 Daily Challenge</h2><p>Soal mini yang dibuat ulang setiap klik.</p></div></div>
+    <div class="interactive-panel"><div class="badge" id="challengeType">CHALLENGE</div><div id="challengeText" style="font-weight:900;margin:12px 0;line-height:1.6"></div><input id="challengeInput" class="search" placeholder="jawaban angka / pecahan sederhana"><div class="control-row"><button class="btn primary" id="checkChallenge">Check</button><button class="btn" id="newChallenge">New</button></div><div class="result" id="challengeResult">Belum dicek.</div></div>
+  </div>
+</section>
+
+<section id="graph" class="bento">
+  <div class="card glass span-12 graph-card">
+    <div class="section-head"><div><h2>📈 Graph Playground</h2><p>Lihat \(y=a^x\), kebalikannya \(y=\log_a x\), dan garis \(y=x\). Semua parameter responsif.</p></div><div class="toolbar"><button class="btn" id="resetGraph">Reset Graph</button><button class="btn" id="graphHelp">Graph Tips</button></div></div>
+    <div class="graph-controls">
+      <div class="range-wrap"><label><span>Basis</span><b id="baseOut">2</b></label><input id="baseRange" type="range" min="1.1" max="8" step="0.1" value="2"></div>
+      <div class="range-wrap"><label><span>X min</span><b id="xminOut">-6</b></label><input id="xminRange" type="range" min="-10" max="-1" step="1" value="-6"></div>
+      <div class="range-wrap"><label><span>X max</span><b id="xmaxOut">6</b></label><input id="xmaxRange" type="range" min="2" max="10" step="1" value="6"></div>
+      <div class="range-wrap"><label><span>Y cap</span><b id="ycapOut">20</b></label><input id="ycapRange" type="range" min="5" max="80" step="5" value="20"></div>
+      <div class="range-wrap"><label><span>Mode</span><b>VIEW</b></label><select id="graphMode"><option value="both">Eksponen + Log</option><option value="expo">Eksponen saja</option><option value="log">Logaritma saja</option><option value="inverse">Inverse Focus</option></select></div>
+    </div>
+    <div class="legend-chips"><span class="legend-chip"><span class="dot"></span> Eksponen</span><span class="legend-chip"><span class="dot" style="background:var(--secondary)"></span> Logaritma</span><span class="legend-chip"><span class="dot" style="background:var(--amber)"></span> Garis \(y=x\)</span></div>
+    <div class="graph-shell"><div id="plot"></div></div>
+    <div id="graphTip" class="note-box" style="margin-top:10px">Tip: grafik eksponen dan logaritma adalah fungsi invers, jadi bentuknya saling memantulkan terhadap \(y=x\).</div>
+  </div>
+</section>
+
+<section id="quiz" class="bento">
+  <div class="card glass span-12">
+    <div class="section-head"><div><h2>🎯 Quiz Battle</h2><p>10 soal, opsi dengan KaTeX, feedback langsung, best score tersimpan.</p></div><div class="toolbar"><span class="badge" id="quizBadge">ROUND 1</span><button class="btn" id="randomQuiz">Shuffle</button></div></div>
+    <div class="quiz-layout"><div class="quiz-list" id="quizList"></div>
+      <aside class="quiz-side"><div class="eyebrow">YOUR SCORE</div><div class="big-score" id="quizScore">0/10</div><div class="score-bar"><span id="scoreBar"></span></div><p class="mini" id="quizMessage">Jawab soal-soalnya. Submit untuk mengunci ronde.</p><div class="rank-pill" id="quizRank">Rank: belum dinilai</div><div class="control-row" style="margin-top:12px"><button class="btn primary" id="submitQuiz">Submit</button><button class="btn" id="retryQuiz">Retry</button></div></aside>
+    </div>
+  </div>
+</section>
+
+<section id="flash" class="bento">
+  <div class="card glass span-12">
+    <div class="section-head"><div><h2>🃏 Flashcard Arena</h2><p>Klik card untuk flip, Space/Enter untuk flip, ← → untuk pindah. KaTeX dirender ulang setiap kartu berubah.</p></div><span class="badge" id="flashCounter">1 / 20</span></div>
+    <div class="flash-layout"><div><div class="flash-stage" id="flashCard" tabindex="0" role="button" aria-label="Flashcard. Press Space or Enter to flip."><div class="flash-inner"><div class="face"><div class="eyebrow">FRONT</div><div class="flash-term" id="flashTerm"></div><div class="mini">Coba jelaskan dari ingatan sebelum flip.</div></div><div class="face back"><div class="eyebrow">BACK</div><div id="flashAnswer" style="font-weight:850;line-height:1.7"></div><div class="mini">Satu kalimat versimu sendiri lebih berguna daripada sekadar menghafal.</div></div></div></div><div class="flash-controls"><button class="btn" id="prevFlash">← Prev</button><button class="btn" id="nextFlash">Next →</button></div></div>
+      <aside class="flash-side"><div class="interactive-panel"><div class="eyebrow">RECALL METER</div><div style="display:flex;justify-content:space-between;gap:8px;margin-top:7px"><b id="memoryCount">0 known</b><span class="mini" id="againCount">0 again</span></div><div class="meter" style="margin-top:8px"><span id="memoryMeter"></span></div><div class="memory-buttons" style="margin-top:10px"><button class="btn" id="againFlash">Again</button><button class="btn green" id="gotFlash">Got it</button></div></div>
+      <div class="interactive-panel"><div class="eyebrow">HOTKEYS</div><div class="hotkeys" style="margin-top:8px"><div class="key"><b>Space</b> flip</div><div class="key"><b>← →</b> pindah</div><div class="key"><b>G</b> Got it</div><div class="key"><b>A</b> Again</div></div></div>
+      <div class="interactive-panel"><div class="eyebrow">CARD STATUS</div><div class="flash-meta" style="margin-top:6px"><span class="mini" id="flashStatus">Baca → jawab dari ingatan → flip → nilai dirimu.</span><span class="mastery-pill" id="flashLevel">LEVEL 0</span></div><div class="flash-navline" id="flashDots"></div></div></aside>
+    </div>
+  </div>
+</section>
+
+<section id="notes" class="bento">
+  <div class="card glass span-7">
+    <div class="section-head"><div><h2>📝 Study Notes</h2><p>Catatan sederhana tersimpan di browser ini.</p></div><button class="btn" id="clearNotes">Clear Notes</button></div>
+    <div class="note-layout"><div class="note-area"><textarea id="noteInput" placeholder="Tulis rumus yang sering salah, shortcut, atau pertanyaan yang harus kamu ulang..."></textarea><div class="control-row" style="margin-top:8px"><button class="btn primary" id="saveNote">Save note</button></div></div><div class="note-list" id="noteList"></div></div>
+  </div>
+  <div class="card glass span-5">
+    <div class="section-head"><div><h2>⏱ Focus Timer</h2><p>Mode belajar pendek, tanpa drama.</p></div><span class="badge" id="timerMode">25 MIN</span></div>
+    <div class="timer"><div class="timer-ring" id="timerRing"><div class="timer-time" id="timerTime">25:00</div></div><div class="timer-actions"><button class="btn primary" id="timerStart">Start</button><button class="btn" id="timerPause">Pause</button><button class="btn" id="timerReset">Reset</button></div></div>
+  </div>
+</section>
+
+
+
+<section id="cockpit" class="bento">
+  <div class="card glass span-12 card-lift">
+    <div class="section-head"><div><h2>🧭 Study Cockpit</h2><p>Ringkasan sesi, target hari ini, dan jalur belajar yang berubah mengikuti progresmu.</p></div><div class="toolbar"><span class="badge" id="cockpitStatus">READY</span><button class="btn" id="logSession">+ Study session</button><button class="btn" id="zenToggle">Zen Mode</button><button class="btn" id="densityToggle">Compact UI</button></div></div>
+    <div class="cockpit-grid">
+      <div class="interactive-panel">
+        <div class="eyebrow">TODAY'S SIGNAL</div><div class="stat-grid-4" style="margin-top:10px">
+          <div class="stat"><span class="mini">Streak</span><div class="big-mini" id="streakCount">0</div><span>hari</span></div>
+          <div class="stat"><span class="mini">Sessions</span><div class="big-mini" id="sessionCount">0</div><span>tercatat</span></div>
+          <div class="stat"><span class="mini">Mastery</span><div class="big-mini" id="masteryPct">0%</div><span>gabungan</span></div>
+          <div class="stat"><span class="mini">Focus</span><div class="big-mini" id="focusMins">0</div><span>menit</span></div>
+        </div>
+        <div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px;font-weight:850"><span>Target hari ini</span><span id="goalText">0 / 3</span></div><div class="goal-track" style="margin-top:7px"><span id="goalBar"></span></div></div>
+      </div>
+      <div class="interactive-panel">
+        <div class="eyebrow">3-STEP ROUTE</div>
+        <div class="plan-list" style="margin-top:9px">
+          <label class="plan-item"><input class="studyGoal" data-goal="1" type="checkbox"> Baca 1 materi + checkpoint</label>
+          <label class="plan-item"><input class="studyGoal" data-goal="2" type="checkbox"> Selesaikan 3 flashcard</label>
+          <label class="plan-item"><input class="studyGoal" data-goal="3" type="checkbox"> Jawab 3 soal trainer</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="trainer" class="bento">
+  <div class="card glass span-12">
+    <div class="section-head"><div><h2>🧠 Concept Trainer</h2><p>Active recall: jawab dulu, minta hint, lalu buka langkah lengkap. Kesalahan trainer masuk ke Vault.</p></div><div class="toolbar"><span class="badge" id="trainerStreak">0 correct</span><button class="btn" id="newTrainer">New problem</button></div></div>
+    <div class="trainer-layout">
+      <div class="trainer-card"><div class="eyebrow" id="trainerTopic">EXPONENT</div><div class="trainer-problem" id="trainerProblem"></div><div class="field" style="margin-top:13px"><input id="trainerAnswer" placeholder="Tulis jawaban, misalnya 2 atau 7/2"><button class="btn primary" id="checkTrainer">Check</button></div><div class="control-row" style="margin-top:9px"><button class="btn" id="trainerHint">Hint ①</button><button class="btn" id="trainerReveal">Show steps</button></div><div class="result" id="trainerResult">Belum dijawab.</div><div class="step-list" id="trainerSteps"></div></div>
+      <aside class="interactive-panel"><div class="eyebrow">HOW TO THINK</div><div class="reading-steps" style="margin-top:9px"><div class="reading-step"><b>1 · Identify</b><br><span class="mini">Cari basis, pangkat, argumen, dan apa yang ditanya.</span></div><div class="reading-step"><b>2 · Choose</b><br><span class="mini">Pilih sifat eksponen/log yang tepat, jangan langsung operasi acak.</span></div><div class="reading-step"><b>3 · Verify</b><br><span class="mini">Substitusi balik dan cek syarat domain bila ada logaritma.</span></div></div></aside>
+    </div>
+  </div>
+</section>
+
+<section id="speed" class="bento">
+  <div class="card glass span-12">
+    <div class="section-head"><div><h2>⚡ 60-Second Speed Drill</h2><p>Latihan cepat untuk mengasah pengenalan pola. Jawaban tidak wajib sempurna, yang penting ritmenya.</p></div><span class="badge" id="speedScore">0 correct</span></div>
+    <div class="speed-grid"><div class="speed-q"><div class="eyebrow" id="speedTopic">READY</div><div id="speedPrompt" class="trainer-problem"></div><input id="speedInput" class="search" placeholder="jawaban"><div class="speed-actions"><button class="btn primary" id="speedStart">Start 60s</button><button class="btn" id="speedCheck">Check</button><button class="btn" id="speedNext">Skip</button></div><div class="result" id="speedResult">Tekan Start untuk mulai.</div></div><div class="interactive-panel" style="text-align:center"><div class="eyebrow">TIME LEFT</div><div class="speed-timer" id="speedTimer">60</div><div class="mini">Soal benar bertambah. Skip tidak mengurangi skor.</div><div class="progress" style="margin-top:12px"><span id="speedBar"></span></div></div></div>
+  </div>
+</section>
+
+<section id="exam" class="bento">
+  <div class="card glass span-12">
+    <div class="section-head"><div><h2>📝 Exam Mode</h2><p>15 soal acak, satu per satu, dengan timer. Berbeda dari Quiz Battle: hasil keluar setelah selesai.</p></div><div class="toolbar"><span class="badge" id="examStatus">NOT STARTED</span><button class="btn primary" id="examStart">Start Exam</button></div></div>
+    <div class="exam-grid"><div><div class="exam-card"><div class="q-meta"><span class="q-index" id="examIndex">Question 1 / 15</span><span class="q-points">+1 point</span></div><div class="exam-q" id="examQuestion">Mulai exam untuk melihat soal.</div><div class="exam-options" id="examOptions"></div><div class="exam-nav"><button class="btn" id="examPrev">← Prev</button><div class="exam-dots" id="examDots"></div><button class="btn" id="examNext">Next →</button></div></div><div class="result" id="examResult" style="margin-top:10px">Hasil akan muncul setelah Submit.</div></div><aside class="interactive-panel exam-side"><div class="eyebrow">EXAM CLOCK</div><div class="speed-timer" id="examTimer">15:00</div><div class="mini">Waktu berjalan setelah exam dimulai.</div><button class="btn green" id="examSubmit" style="width:100%;margin-top:12px">Submit Exam</button><button class="btn" id="examReset" style="width:100%;margin-top:7px">Reset</button><div class="rank-pill" style="margin-top:9px" id="examScore">0 / 15</div></aside></div>
+  </div>
+</section>
+
+<section id="vault" class="bento">
+  <div class="card glass span-7">
+    <div class="section-head"><div><h2>🗃️ Mistake Vault</h2><p>Kesalahan tidak dibuang. Disimpan jadi daftar review yang bisa dibersihkan setelah paham.</p></div><button class="btn" id="clearMistakes">Clear Vault</button></div>
+    <div class="mistake-list" id="mistakeList"></div>
+  </div>
+  <div class="card glass span-5">
+    <div class="section-head"><div><h2>🔗 Formula Match</h2><p>Pasangkan rumus dengan maknanya. 8 kartu, 4 pasangan.</p></div><button class="btn primary" id="newMatch">New board</button></div>
+    <div class="match-board" id="matchBoard"></div><div class="result" id="matchStatus">Cari pasangan yang cocok.</div>
+  </div>
+</section>
+
+<section id="reading" class="bento">
+  <div class="card glass span-12">
+    <div class="section-head"><div><h2>🔍 Study Lens</h2><p>Checklist cara membaca soal sebelum hitung. Ini membantu mencegah salah memilih sifat.</p></div></div>
+    <div class="reading-card">
+      <div class="interactive-panel"><div class="eyebrow">QUESTION DECODER</div><div class="reading-steps" style="margin-top:9px"><div class="reading-step"><b>What is changing?</b><br><span class="mini">Apakah basis, pangkat, argumen, atau rasio yang berubah?</span></div><div class="reading-step"><b>What operation appears?</b><br><span class="mini">Perkalian, pembagian, pangkat bertingkat, akar, atau log?</span></div><div class="reading-step"><b>What condition applies?</b><br><span class="mini">Untuk log: cek basis dan argumen positif. Untuk pembagian: cek penyebut.</span></div><div class="reading-step"><b>Can I verify?</b><br><span class="mini">Coba substitusi balik atau ubah ke bentuk eksponen.</span></div></div></div>
+      <div class="interactive-panel"><div class="eyebrow">SELF-EXPLAIN</div><textarea id="teachBox" placeholder="Jelaskan dengan bahasamu sendiri: mengapa log₃√3 = 1/2?" style="min-height:180px;width:100%;padding:12px;border:1px solid var(--line-strong);border-radius:14px;background:var(--surface-2);color:var(--text)"></textarea><div class="control-row" style="margin-top:8px"><button class="btn primary" id="saveTeach">Save explanation</button><span class="mini" id="teachStatus">Belum disimpan.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="cheat" class="bento">
+  <div class="card glass span-12">
+    <div class="section-head"><div><h2>📖 Cheat Sheet Super Padat</h2><p>Dasar aljabar, sifat akar, sifat eksponen, persamaan eksponen, sifat logaritma, dan persamaan logaritma.</p></div><span class="badge" id="rowCount">30 rules</span></div>
+    <div class="sheet-toolbar"><input id="sheetSearch" class="search" placeholder="Cari: distributif, akar, pangkat negatif, log perkalian, domain..."><div class="seg"><button class="sheet-filter active" data-cat="all">All</button><button class="sheet-filter" data-cat="Aljabar">Aljabar</button><button class="sheet-filter" data-cat="Akar">Akar</button><button class="sheet-filter" data-cat="Eksponen">Eksponen</button><button class="sheet-filter" data-cat="Logaritma">Logaritma</button><button class="sheet-filter" data-cat="Persamaan">Persamaan</button></div></div>
+    <div class="sheet"><table id="sheetTable"><thead><tr><th>Kategori</th><th>Sifat / Rumus</th><th>Catatan</th></tr></thead><tbody>
+      <tr data-cat="Aljabar"><td>Aljabar</td><td>\((a+b)^2=a^2+2ab+b^2\)</td><td>Kuadrat jumlah</td></tr>
+      <tr data-cat="Aljabar"><td>Aljabar</td><td>\((a-b)^2=a^2-2ab+b^2\)</td><td>Kuadrat selisih</td></tr>
+      <tr data-cat="Aljabar"><td>Aljabar</td><td>\(a^2-b^2=(a-b)(a+b)\)</td><td>Selisih kuadrat</td></tr>
+      <tr data-cat="Aljabar"><td>Aljabar</td><td>\(a(b+c)=ab+ac\)</td><td>Distributif</td></tr>
+      <tr data-cat="Aljabar"><td>Aljabar</td><td>\((a+b)(c+d)=ac+ad+bc+bd\)</td><td>Distribusi ganda</td></tr>
+      <tr data-cat="Akar"><td>Akar</td><td>\(\sqrt{ab}=\sqrt a\sqrt b\)</td><td>Untuk radikan non-negatif pada bilangan real</td></tr>
+      <tr data-cat="Akar"><td>Akar</td><td>\(\frac{\sqrt a}{\sqrt b}=\sqrt{\frac ab}\)</td><td>Dengan \(b>0\)</td></tr>
+      <tr data-cat="Akar"><td>Akar</td><td>\(\sqrt{a^2}=|a|\)</td><td>Jangan lupa nilai mutlak</td></tr>
+      <tr data-cat="Akar"><td>Akar</td><td>\(\sqrt[n]{a^m}=a^{m/n}\)</td><td>Hubungan akar dan pangkat pecahan</td></tr>
+      <tr data-cat="Akar"><td>Akar</td><td>\(k\sqrt r\) dari \(\sqrt{n}\)</td><td>Ambil faktor kuadrat sempurna terbesar</td></tr>
+      <tr data-cat="Eksponen"><td>Eksponen</td><td>\(a^0=1\)</td><td>Untuk \(a\ne0\)</td></tr>
+      <tr data-cat="Eksponen"><td>Eksponen</td><td>\(a^{-n}=\frac1{a^n}\)</td><td>Pangkat negatif menjadi kebalikan</td></tr>
+      <tr data-cat="Eksponen"><td>Eksponen</td><td>\(a^m a^n=a^{m+n}\)</td><td>Basis sama</td></tr>
+      <tr data-cat="Eksponen"><td>Eksponen</td><td>\(\frac{a^m}{a^n}=a^{m-n}\)</td><td>Basis sama, \(a\ne0\)</td></tr>
+      <tr data-cat="Eksponen"><td>Eksponen</td><td>\((a^m)^n=a^{mn}\)</td><td>Pangkat dikalikan</td></tr>
+      <tr data-cat="Eksponen"><td>Eksponen</td><td>\((ab)^n=a^nb^n\)</td><td>Distribusi pangkat ke perkalian</td></tr>
+      <tr data-cat="Eksponen"><td>Eksponen</td><td>\(a^{m/n}=\sqrt[n]{a^m}\)</td><td>Pangkat pecahan</td></tr>
+      <tr data-cat="Persamaan"><td>Persamaan Eksponen</td><td>\(a^{f(x)}=a^{g(x)}\Rightarrow f(x)=g(x)\)</td><td>Basis sama, \(a>0,a\ne1\)</td></tr>
+      <tr data-cat="Persamaan"><td>Persamaan Eksponen</td><td>\(a^{f(x)}=b\Rightarrow f(x)=\log_a b\)</td><td>Ubah ke logaritma bila perlu</td></tr>
+      <tr data-cat="Logaritma"><td>Logaritma</td><td>\(\log_a b=c\Longleftrightarrow a^c=b\)</td><td>Definisi utama</td></tr>
+      <tr data-cat="Logaritma"><td>Logaritma</td><td>\(\log_a1=0\)</td><td>Karena \(a^0=1\)</td></tr>
+      <tr data-cat="Logaritma"><td>Logaritma</td><td>\(\log_a a=1\)</td><td>Karena \(a^1=a\)</td></tr>
+      <tr data-cat="Logaritma"><td>Logaritma</td><td>\(\log_a(MN)=\log_aM+\log_aN\)</td><td>Perkalian → tambah</td></tr>
+      <tr data-cat="Logaritma"><td>Logaritma</td><td>\(\log_a\frac MN=\log_aM-\log_aN\)</td><td>Pembagian → kurang</td></tr>
+      <tr data-cat="Logaritma"><td>Logaritma</td><td>\(\log_a(M^k)=k\log_aM\)</td><td>Pangkat → koefisien</td></tr>
+      <tr data-cat="Logaritma"><td>Logaritma</td><td>\(\log_a b=\frac{\log_c b}{\log_c a}\)</td><td>Perubahan basis</td></tr>
+      <tr data-cat="Persamaan"><td>Persamaan Logaritma</td><td>\(\log_a f(x)=\log_a g(x)\Rightarrow f(x)=g(x)\)</td><td>Argumen keduanya harus positif</td></tr>
+      <tr data-cat="Persamaan"><td>Persamaan Logaritma</td><td>\(f(x)>0\)</td><td>Syarat domain argumen</td></tr>
+      <tr data-cat="Persamaan"><td>Persamaan Logaritma</td><td>\(a>0,\ a\ne1\)</td><td>Syarat basis logaritma</td></tr>
+      <tr data-cat="Persamaan"><td>Persamaan Logaritma</td><td>\(\log_a u=\log_a v\)</td><td>Valid untuk argumen positif</td></tr>
+      </tbody></table></div>
+  </div>
+</section>
+
+
+<div class="utility-dock extra-chrome"><button class="dock-btn" id="dockTop" title="Back to top">↑</button><button class="dock-btn" id="dockPalette" title="Quick jump">⌘</button><button class="dock-btn" id="dockHelp" title="Shortcuts">?</button></div>
+<div class="modal-backdrop hidden" id="paletteModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="paletteTitle"><div class="modal-head"><div><div class="eyebrow">QUICK JUMP</div><h2 id="paletteTitle" style="margin:5px 0 0">Command Palette</h2></div><button class="icon-btn" data-close-modal="paletteModal">×</button></div><input class="palette-input" id="paletteInput" autocomplete="off" placeholder="Cari section, fitur, atau aksi..."><div class="palette-results" id="paletteResults"></div></div></div>
+<div class="modal-backdrop hidden" id="helpModal"><div class="modal" role="dialog" aria-modal="true"><div class="modal-head"><div><div class="eyebrow">KEYBOARD</div><h2 style="margin:5px 0 0">Study Shortcuts</h2></div><button class="icon-btn" data-close-modal="helpModal">×</button></div><div class="modal-grid"><div class="note-box"><b><span class="kbd">Space</span></b><p class="mini">Flip flashcard</p></div><div class="note-box"><b><span class="kbd">←</span> <span class="kbd">→</span></b><p class="mini">Pindah flashcard</p></div><div class="note-box"><b><span class="kbd">G</span></b><p class="mini">Got it</p></div><div class="note-box"><b><span class="kbd">A</span></b><p class="mini">Again</p></div><div class="note-box"><b><span class="kbd">Ctrl/⌘ K</span></b><p class="mini">Buka command palette</p></div><div class="note-box"><b><span class="kbd">Esc</span></b><p class="mini">Tutup modal / palette</p></div></div></div></div>
+
+<footer class="footer glass">
+  <div class="footer-grid"><div><div class="brand"><span class="brand-mark">y?</span><span>yourr-ikyy?</span></div><p class="mini">STS Math Lab · Eksponen & Logaritma · Interaktif & responsif. aing yg bikin ezet hahai</p><p class="mini">© 2026 yourr-ikyy? · with tung tung</p></div><div><div class="eyebrow" style="margin-bottom:9px">FIND ME</div><div class="links"><a href="https://codepen.io/eL-Fikyzz" target="_blank" rel="noreferrer">CodePen</a><a href="https://github.com/yourr-ikyygithub" target="_blank" rel="noreferrer">GitHub</a><a href="https://dev.to/yourrikyy" target="_blank" rel="noreferrer">Dev.to</a><a href="https://www.instagram.com/your_ikyz/" target="_blank" rel="noreferrer">Instagram</a><a href="https://steamcommunity.com/id/skibadifikyz" target="_blank" rel="noreferrer">Steam · skibadifikyz</a></div></div></div>
+</footer>
+</main>
+
+<button class="icon-btn backtop" id="backTop" aria-label="Back to top">↑</button>
+<div class="toast" id="toast">Saved ✦</div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d=null){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}},del(k){try{localStorage.removeItem(k)}catch{}}};
+
+// Local-storage compatibility guard for previous builds.
+try{
+  const fo=localStorage.getItem('flashOpened'); if(fo!==null){const parsed=JSON.parse(fo);if(!Array.isArray(parsed))localStorage.setItem('flashOpened','[]')}
+  const fk=localStorage.getItem('flashKnown'); if(fk!==null){const parsed=JSON.parse(fk);if(!Array.isArray(parsed))localStorage.setItem('flashKnown','[]')}
+}catch{}
+
+const toast=msg=>{const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.classList.remove('show'),1600)};
+function renderMath(root=document.body){if(window.renderMathInElement){renderMathInElement(root,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false},{left:'$',right:'$',display:false}],throwOnError:false,strict:false})}}
+function escapeHtml(s){return String(s).replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\\':'&#92;','"':'&quot;'}[m]))}
+
+// Theme
+function applyTheme(theme){document.documentElement.dataset.theme=theme;$('#themeToggle').textContent=theme==='dark'?'☀':'☾';$('#themeLabel').textContent=theme.toUpperCase();store.set('theme',theme);drawGraph();}
+applyTheme(store.get('theme',matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+$('#themeToggle').onclick=()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+
+// Visitor name
+$('#saveName').onclick=()=>{const old=store.get('studentName','');const name=prompt('Nama yang mau ditampilkan di dashboard:',old);if(name!==null){store.set('studentName',name.trim());updateProgress();toast(name.trim()?`Halo, ${name.trim()}!`:'Nama dihapus')}};
+
+// Material filters
+$$('.filter').forEach(b=>b.onclick=()=>{$$('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');const f=b.dataset.filter;$$('.lesson').forEach(x=>x.classList.toggle('hidden',f!=='all'&&x.dataset.kind!==f));});
+
+// Formula copy buttons
+$$('.copyable').forEach(el=>el.onclick=async()=>{const text=el.innerText.trim();try{await navigator.clipboard.writeText(text);toast('Formula copied ✦')}catch{toast('Formula siap dipilih ✦')}});
+
+// Checkpoints
+const checks=store.get('checks',{});
+$$('.checkpoint').forEach(c=>{c.checked=!!checks[c.dataset.check];c.onchange=()=>{checks[c.dataset.check]=c.checked;store.set('checks',checks);updateProgress();toast(c.checked?'Checkpoint cleared ✓':'Checkpoint unchecked')}});
+
+// Lab calculations
+function fmt(n){if(!Number.isFinite(n))return 'tidak terdefinisi';return Number(n.toFixed(8)).toString()}
+$('#calcPower').onclick=()=>{const a=+$('#lb').value,m=+$('#lm').value,n=+$('#ln').value;if(!Number.isFinite(a)||a===0)return $('#powerResult').textContent='Basis harus ≠ 0 untuk pembagian aturan pangkat.';const p=m+n;$('#powerResult').innerHTML=`\\(${a}^{${m}}\\cdot${a}^{${n}}=${a}^{${p}}\\) = <b>${Number(Math.pow(a,p)).toLocaleString('id-ID')}</b>`;renderMath($('#powerResult'))};
+$('#calcLog').onclick=()=>{const a=+$('#logBase').value,b=+$('#logVal').value;const r=$('#logResult');if(a<=0||a===1||b<=0){r.classList.add('bad');r.innerHTML='Syarat: \\(a>0, a\\ne1, b>0\\).';renderMath(r);return}r.classList.remove('bad');const x=Math.log(b)/Math.log(a);r.innerHTML=`\\(\\log_${a}(${b})=${fmt(x)}\\)`;renderMath(r)};
+$('#calcEq').onclick=()=>{const a=+$('#eqBase').value,b=+$('#eqShift').value,c=+$('#eqTarget').value;const r=$('#eqResult');if(a<=0||a===1||c<=0){r.classList.add('bad');r.textContent='Syarat: a > 0, a ≠ 1, c > 0.';return}r.classList.remove('bad');const x=Math.log(c)/Math.log(a)-b;r.innerHTML=`\\(x=\\log_${a}(${c})-${b}\\approx ${fmt(x)}\\)`;renderMath(r)};
+function simplifyRoot(n){n=Math.trunc(n);if(n<0)return 'Masukkan bilangan ≥ 0';if(n===0)return '0';let k=Math.floor(Math.sqrt(n));while(k>1&&n%(k*k)!==0)k--;return k===1?`\\sqrt{${n}}`:k===n?`${k}`:`${k}\\sqrt{${n/(k*k)}}`}
+
+const rootInput=$('#rootN'), rootOut=$('#rootResult'); $('#calcRoot').onclick=()=>{const n=+rootInput.value;rootOut.innerHTML=`\\sqrt{${Math.trunc(n)}} = ${simplifyRoot(n)} `;renderMath(rootOut)};
+
+// Converter
+function updateConverter(){const a=+$('#convA').value,b=+$('#convB').value;const out=$('#convOutput');if(a<=0||a===1){out.innerHTML='Basis harus memenuhi \\(a>0, a\\ne1\\).';renderMath(out);return}const c=Math.pow(a,b);out.innerHTML=`Eksponen: \\( ${a}^{${b}}=${fmt(c)} \\) &nbsp; • &nbsp; Logaritma: \\(\\log_{${a}}(${fmt(c)})=${b}\\)`;renderMath(out)}
+['convA','convB'].forEach(id=>$( '#'+id).addEventListener('input',updateConverter));updateConverter();
+
+// Challenge
+const challengeBank=[
+  {q:'Hitung \\(2^3\\cdot2^4\\).',a:'128',label:'EXPONENT'},
+  {q:'Hitung \\(\\log_3 27+\\log_3\\sqrt3\\).',a:'7/2',label:'LOG SUM'},
+  {q:'Jika \\(3^x=81\\), tentukan \\(x\\).',a:'4',label:'EQUATION'},
+  {q:'Sederhanakan \\(\\sqrt{72}\\).',a:'6√2',label:'ROOT'},
+  {q:'Jika \\(\\log 2=p\\), tentukan \\(\\log 8\\).',a:'3p',label:'VARIABLE LOG'}
+];let challenge=challengeBank[Math.floor(Math.random()*challengeBank.length)];
+function renderChallenge(){challenge=challengeBank[Math.floor(Math.random()*challengeBank.length)];$('#challengeType').textContent=challenge.label;$('#challengeText').innerHTML=challenge.q;$('#challengeInput').value='';$('#challengeResult').textContent='Belum dicek.';renderMath($('#challengeText'))}renderChallenge();
+$('#newChallenge').onclick=renderChallenge;$('#checkChallenge').onclick=()=>{const val=$('#challengeInput').value.trim().replace(/\s/g,'').toLowerCase();const ans=challenge.a.replace(/\s/g,'').toLowerCase();const ok=val===ans||((challenge.a==='7/2')&&(val==='3.5'));$('#challengeResult').className='result '+(ok?'':'bad');$('#challengeResult').textContent=ok?'✓ Benar!':'✗ Belum pas. Coba pecah langkahnya lagi.';if(ok)toast('Challenge cleared ✦')};
+
+// Graph
+function graphColors(){const dark=document.documentElement.dataset.theme==='dark';return {expo:dark?'#7ea2ff':'#3a67ff',log:dark?'#2bd19a':'#12ad78',line:dark?'#f3ba52':'#d89121',text:dark?'#eaf1ff':'#10213d',grid:dark?'#223653':'#dfe7f2',bg:dark?'rgba(10,21,40,.92)':'rgba(255,255,255,.82)'}}
+function drawGraph(){if(!window.Plotly)return;const a=+$('#baseRange').value,xmin=+$('#xminRange').value,xmax=+$('#xmaxRange').value,ycap=+$('#ycapRange').value,mode=$('#graphMode').value;$('#baseOut').textContent=a;$('#xminOut').textContent=xmin;$('#xmaxOut').textContent=xmax;$('#ycapOut').textContent=ycap;const C=graphColors();const xs=[],ye=[],xl=[],yl=[];for(let i=0;i<=600;i++){const x=xmin+(xmax-xmin)*i/600;const y=Math.pow(a,x);if(y<=ycap*1.15)xs.push(x),ye.push(y)}for(let i=0;i<=500;i++){const x=0.03+(xmax-0.03)*i/500;const y=Math.log(x)/Math.log(a);if(Math.abs(y)<=ycap*1.15)xl.push(x),yl.push(y)}const traces=[];if(mode!=='log')traces.push({x:xs,y:ye,name:`y = ${a}ˣ`,mode:'lines',line:{color:C.expo,width:4,shape:'spline'}});if(mode!=='expo')traces.push({x:xl,y:yl,name:`y = log_${a}(x)`,mode:'lines',line:{color:C.log,width:4,dash:'dash',shape:'spline'}});if(mode!=='expo'&&mode!=='log')traces.push({x:[-ycap,ycap],y:[-ycap,ycap],name:'y = x',mode:'lines',line:{color:C.line,width:2,dash:'dot'}});const layout={margin:{l:48,r:18,t:22,b:48},paper_bgcolor:C.bg,plot_bgcolor:C.bg,font:{color:C.text},hoverlabel:{bgcolor:C.bg,font:{color:C.text}},legend:{orientation:'h',y:1.04,x:0},xaxis:{title:'x',zeroline:true,gridcolor:C.grid,linecolor:C.grid,range:[xmin,Math.max(xmax,1)]},yaxis:{title:'y',zeroline:true,gridcolor:C.grid,linecolor:C.grid,range:[Math.min(-ycap,-2),ycap]},hovermode:'x unified'};Plotly.react('plot',traces,layout,{responsive:true,displayModeBar:false});
+}
+['#baseRange','#xminRange','#xmaxRange','#ycapRange'].forEach(id=>$(id).addEventListener('input',drawGraph));$('#graphMode').addEventListener('change',drawGraph);$('#resetGraph').onclick=()=>{$('#baseRange').value=2;$('#xminRange').value=-6;$('#xmaxRange').value=6;$('#ycapRange').value=20;$('#graphMode').value='both';drawGraph();toast('Graph reset')};$('#graphHelp').onclick=()=>{const tips=['Cari hubungan invers: titik pada eksponen menjadi pasangan terbalik pada logaritma.','Semakin besar basis >1, grafik eksponen tumbuh lebih cepat.','Perhatikan domain logaritma: hanya x > 0.'];$('#graphTip').textContent=tips[Math.floor(Math.random()*tips.length)];renderMath($('#graphTip'));};
+
+// Quiz
+const quizBank=[
+ {q:'Hasil dari \\(2^3\\times2^4\\) adalah ...',o:['\\(2^7\\)','\\(2^1\\)','\\(4^7\\)','\\(2^{12}\\)'],a:0,e:'Basis sama → pangkat dijumlahkan: \\(3+4=7\\).'},
+ {q:'Nilai \\(x\\) pada \\(3^x=27\\) adalah ...',o:['1','2','3','9'],a:2,e:'Karena \\(27=3^3\\), maka \\(x=3\\).'},
+ {q:'Nilai \\(\\log_2 32\\) adalah ...',o:['4','5','6','8'],a:1,e:'Karena \\(2^5=32\\).'},
+ {q:'Nilai \\(\\log_3 27+\\log_3\\sqrt3\\) adalah ...',o:['\\(\\frac32\\)','\\(\\frac52\\)','\\(\\frac72\\)','4'],a:2,e:'\\(\\log_3 27=3\\) dan \\(\\log_3\\sqrt3=\\frac12\\).'},
+ {q:'Sifat logaritma yang benar adalah ...',o:['\\(\\log(MN)=\\log M-\\log N\\)','\\(\\log(MN)=\\log M+\\log N\\)','\\(\\log(MN)=\\log M\\times\\log N\\)','\\(\\log(MN)=\\frac{\\log M}{\\log N}\\)'],a:1,e:'Perkalian di dalam log berubah menjadi penjumlahan.'},
+ {q:'Syarat argumen \\(f(x)\\) dalam \\(\\log_a f(x)\\) adalah ...',o:['\\(f(x)<0\\)','\\(f(x)=0\\)','\\(f(x)>0\\)','bebas'],a:2,e:'Argumen logaritma real harus positif.'},
+ {q:'Bentuk sederhana dari \\((a^m)^n\\) adalah ...',o:['\\(a^{m+n}\\)','\\(a^{m-n}\\)','\\(a^{mn}\\)','\\(na^m\\)'],a:2,e:'Pangkat bertingkat → pangkat dikalikan.'},
+ {q:'Bentuk sederhana dari \\(\\sqrt{27}\\) adalah ...',o:['\\(3\\sqrt3\\)','\\(9\\sqrt3\\)','\\(3\\sqrt9\\)','\\(\\sqrt{24}\\)'],a:0,e:'\\(27=9\\times3\\), jadi \\(\\sqrt{27}=3\\sqrt3\\).'},
+ {q:'Jika \\(2^{x+1}=8\\), maka \\(x=...\\)',o:['1','2','3','4'],a:1,e:'\\(8=2^3\\), jadi \\(x+1=3\\Rightarrow x=2\\).'},
+ {q:'Nilai \\(\\log_a a\\), untuk \\(a>0,a\\ne1\\), adalah ...',o:['0','1','a','-1'],a:1,e:'Karena \\(a^1=a\\), maka \\(\\log_a a=1\\).'}
+];
+let quizOrder=[...Array(10).keys()];let selected={};let submitted=false;
+function renderQuiz(){selected={};submitted=false;const list=$('#quizList');list.innerHTML=quizOrder.map((idx,i)=>{const q=quizBank[idx];return `<article class="q-card"><div class="q-meta"><span class="q-index">Question ${i+1}</span><span class="q-points">+1 point</span></div><div class="q-text">${q.q}</div><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-a="${j}"><span class="letter">${String.fromCharCode(65+j)}</span><span>${o}</span></button>`).join('')}</div><div class="feedback" id="qf-${i}">Pilih salah satu.</div></article>`}).join('');$$('.opt').forEach(b=>b.onclick=()=>{if(submitted)return;const qi=+b.dataset.q,aj=+b.dataset.a;selected[qi]=aj;$$(`.opt[data-q="${qi}"]`).forEach(x=>x.classList.remove('correct','wrong'));b.classList.add(aj===quizBank[quizOrder[qi]].a?'correct':'wrong');$('#qf-'+qi).textContent=aj===quizBank[quizOrder[qi]].a?'✓ Potensial benar. Submit untuk mengunci.':'✗ Belum tepat. Coba cek sifatnya lagi.';renderMath(document.getElementById('qf-'+qi));updateQuizPreview()});renderMath(list);$('#quizBadge').textContent='ROUND '+(store.get('quizRound',1));$('#quizScore').textContent='0/10';$('#scoreBar').style.width='0%';$('#quizRank').textContent='Rank: belum dinilai';}
+function updateQuizPreview(){const count=Object.keys(selected).length;$('#quizMessage').textContent=`${count}/10 terjawab. ${count<10?'Masih ada yang belum disentuh.':'Semua terisi, gas submit.'}`}
+function submitQuiz(){let s=0;quizOrder.forEach((idx,i)=>{const q=quizBank[idx];if(selected[i]===q.a)s++;const fb=$('#qf-'+i);if(selected[i]===q.a){fb.innerHTML=`✓ ${q.e}`}else{fb.innerHTML=`✗ Jawaban: ${q.o[q.a]}<br><span class="mini">${q.e}</span>`}});submitted=true;$$('.opt').forEach(b=>{const qi=+b.dataset.q,aj=+b.dataset.a,q=quizBank[quizOrder[qi]];if(aj===q.a)b.classList.add('correct')});renderMath($('#quizList'));const best=Math.max(store.get('bestQuiz',0),s);store.set('bestQuiz',best);$('#quizScore').textContent=`${s}/10`;$('#scoreBar').style.width=(s*10)+'%';const rank=s===10?'Legendary':s>=8?'Ace':s>=6?'Rising Star':s>=4?'Warm-up':'Spawn';$('#quizRank').textContent=`Rank: ${rank}`;$('#quizMessage').textContent=s===10?'Perfect run. 🔥':`Review yang salah. Best score kamu ${best}/10.`;updateProgress();toast(`Score ${s}/10 ✦`)}
+$('#submitQuiz').onclick=submitQuiz;$('#retryQuiz').onclick=()=>{store.set('quizRound',store.get('quizRound',1)+1);renderQuiz()};$('#randomQuiz').onclick=()=>{quizOrder.sort(()=>Math.random()-.5);renderQuiz();document.querySelector('#quiz').scrollIntoView({behavior:'smooth'});toast('Question order shuffled')};renderQuiz();
+
+// Flashcards — robust, schema-safe, accessible
+const flashcards=[
+ ['\\(a^m\\cdot a^n\\)','\\(a^{m+n}\\). Basis sama → pangkat dijumlahkan.','EXPONENT'],
+ ['\\(\\frac{a^m}{a^n}\\)','\\(a^{m-n}\\). Basis sama → pangkat dikurangkan.','EXPONENT'],
+ ['\\((a^m)^n\\)','\\(a^{mn}\\). Pangkat bertingkat → pangkat dikalikan.','EXPONENT'],
+ ['\\(a^0\\)','\\(1\\), untuk \\(a\\ne0\\).','EXPONENT'],
+ ['\\(a^{-n}\\)','\\(\\frac1{a^n}\\). Pangkat negatif menjadi kebalikan.','EXPONENT'],
+ ['\\(\\sqrt[n]{a^m}\\)','\\(a^{m/n}\\). Akar ↔ pangkat pecahan.','EXPONENT'],
+ ['\\(a^b=c\\)','\\(\\log_a c=b\\). Ini definisi logaritma.','LOGARITHM'],
+ ['\\(\\log_a(MN)\\)','\\(\\log_aM+\\log_aN\\).','LOGARITHM'],
+ ['\\(\\log_a\\frac MN\\)','\\(\\log_aM-\\log_aN\\).','LOGARITHM'],
+ ['\\(\\log_a(M^k)\\)','\\(k\\log_aM\\).','LOGARITHM'],
+ ['\\(\\log_a a\\)','\\(1\\).','LOGARITHM'],
+ ['\\(\\log_a 1\\)','\\(0\\).','LOGARITHM'],
+ ['\\(\\log_a b=c\\)','\\(a^c=b\\). Balik ke bentuk eksponen untuk mengecek.','LOGARITHM'],
+ ['\\(\\log_a b=\\frac{\\log b}{\\log a}\\)','Perubahan basis membantu saat basis tidak nyaman.','LOGARITHM'],
+ ['\\(\\log_3\\sqrt3\\)','\\(\\frac12\\), karena \\(\\sqrt3=3^{1/2}\\).','LOGARITHM'],
+ ['\\(\\log_3 27+\\log_3\\sqrt3\\)','\\(3+\\frac12=\\frac72\\).','LOGARITHM'],
+ ['\\(\\sqrt{27}\\)','\\(3\\sqrt3\\). Ambil kuadrat sempurna \\(9\\).','ROOTS'],
+ ['\\(\\sqrt{72}\\)','\\(6\\sqrt2\\). Karena \\(72=36\\cdot2\\).','ROOTS'],
+ ['\\(2^{x+1}=8\\)','\\(x=2\\), karena \\(8=2^3\\).','EQUATION'],
+ ['\\(\\log_2(x-1)=3\\)','\\(x=9\\), lalu cek domain \\(x>1\\).','EQUATION']
+];
+const flashCardEl=$('#flashCard');
+const readArray=(key)=>{const raw=store.get(key,[]);return Array.isArray(raw)?raw:[]};
+let fi=0;
+let flashKnown=new Set(readArray('flashKnown').map(Number).filter(Number.isInteger));
+let againCount=Number(store.get('flashAgain',0))||0;
+let flashOpenedSet=new Set(readArray('flashOpened').map(Number).filter(Number.isInteger));
+let flashLevels=store.get('flashLevels',{});if(!flashLevels||typeof flashLevels!=='object'||Array.isArray(flashLevels))flashLevels={};
+// Migrate the old v2 schema safely: old flashOpened was sometimes a number/string count.
+if(!Array.isArray(store.get('flashOpened',null))){flashOpenedSet.clear();store.set('flashOpened',[]);}
+if(!Array.isArray(store.get('flashKnown',null))){flashKnown.clear();store.set('flashKnown',[]);}
+function saveFlashState(){store.set('flashOpened',[...flashOpenedSet]);store.set('flashKnown',[...flashKnown]);store.set('flashLevels',flashLevels);store.set('flashAgain',againCount)}
+function flashLevel(){return Math.max(0,Math.min(5,Number(flashLevels[fi]?.level)||0))}
+function renderFlashDots(){const box=$('#flashDots');if(!box)return;box.innerHTML=flashcards.map((_,i)=>`<button class="dotnav ${i===fi?'active':''}" aria-label="Card ${i+1}" data-flash-index="${i}"></button>`).join('');box.querySelectorAll('button').forEach(b=>b.onclick=()=>{fi=+b.dataset.flashIndex;renderFlash()})}
+function renderFlash(){const [t,a,topic]=flashcards[fi];$('#flashTerm').innerHTML=t;$('#flashAnswer').innerHTML=a;$('#flashCounter').textContent=`${fi+1} / ${flashcards.length}`;flashCardEl.classList.remove('flipped');$('#flashStatus').textContent=flashKnown.has(fi)?'Kartu ini sudah ditandai Got it ✓':'Baca → jawab → flip → nilai dirimu.';$('#flashLevel').textContent=`LEVEL ${flashLevel()} · ${topic}`;renderMath(flashCardEl);renderFlashDots();updateMemory()}
+function markFlashOpened(){flashOpenedSet.add(fi);saveFlashState();}
+function flipFlash(){flashCardEl.classList.toggle('flipped');markFlashOpened();if(flashCardEl.classList.contains('flipped')){$('#flashStatus').textContent='Jawaban tampil. Sekarang pilih Again atau Got it.'}else{$('#flashStatus').textContent='Kartu kembali ke depan. Coba recall sekali lagi.'}}
+function rateFlash(kind){const old=flashLevel();const next=kind==='got'?Math.min(5,old+1):Math.max(0,old-1);flashLevels[fi]={level:next,last:Date.now(),due:Date.now()+(kind==='got'?[0,1,3,7,14,30][next]*86400000:0)};if(kind==='got'){flashKnown.add(fi);$('#flashStatus').textContent=`Got it ✓ · level ${next}`;toast(`Card mastered · L${next}`)}else{flashKnown.delete(fi);againCount++;$('#flashStatus').textContent='Again ↻ · turunkan level dan ulang lagi.';toast('Card queued again')};saveFlashState();updateMemory()}
+function nextFlash(dir=1){if(!flashcards.length)return;for(let step=1;step<=flashcards.length;step++){const idx=(fi+dir*step+flashcards.length)%flashcards.length;const due=Number(flashLevels[idx]?.due)||0;if(dir>0 && due<=Date.now()&&!flashKnown.has(idx)){fi=idx;renderFlash();return}}fi=(fi+dir+flashcards.length)%flashcards.length;renderFlash()}
+function updateMemory(){$('#memoryCount').textContent=`${flashKnown.size} known`;$('#againCount').textContent=`${againCount} again`;$('#memoryMeter').style.width=(flashKnown.size/flashcards.length*100)+'%';$('#flashLevel').textContent=`LEVEL ${flashLevel()} · ${flashcards[fi][2]}`;updateProgress()}
+flashCardEl.onclick=e=>{if(e.target.closest('button,a,input,textarea,select'))return;flipFlash()};
+flashCardEl.onkeydown=e=>{if(e.key==='Enter'||e.code==='Space'){e.preventDefault();flipFlash()}};
+$('#prevFlash').onclick=()=>nextFlash(-1);$('#nextFlash').onclick=()=>nextFlash(1);
+$('#againFlash').onclick=()=>rateFlash('again');$('#gotFlash').onclick=()=>rateFlash('got');
+document.addEventListener('keydown',e=>{const a=document.activeElement;const typing=['INPUT','TEXTAREA','SELECT'].includes(a?.tagName)||a?.isContentEditable;if(e.ctrlKey||e.metaKey){if(e.key.toLowerCase()==='k'){e.preventDefault();openModal('paletteModal');return}}if(typing)return;if(e.code==='Space'){e.preventDefault();flipFlash()}else if(e.key==='ArrowLeft')nextFlash(-1);else if(e.key==='ArrowRight')nextFlash(1);else if(e.key.toLowerCase()==='g')rateFlash('got');else if(e.key.toLowerCase()==='a')rateFlash('again');else if(e.key==='Escape'){closeAllModals()}});
+renderFlash();
+
+// Notes
+let notes=store.get('notes',[]);function renderNotes(){const list=$('#noteList');list.innerHTML=notes.length?notes.map((n,i)=>`<div class="note-item"><small>${new Date(n.time).toLocaleString('id-ID')} · Note ${i+1}</small><p>${escapeHtml(n.text)}</p></div>`).join(''):'<div class="note-item"><small>No notes yet</small><p>Tulis satu rumus atau kesalahan yang ingin kamu ingat.</p></div>'}$('#saveNote').onclick=()=>{const text=$('#noteInput').value.trim();if(!text)return toast('Note masih kosong');notes.unshift({text,time:Date.now()});notes=notes.slice(0,20);store.set('notes',notes);$('#noteInput').value='';renderNotes();toast('Note saved ✦')};$('#clearNotes').onclick=()=>{if(confirm('Hapus semua notes di browser ini?')){notes=[];store.set('notes',notes);renderNotes();toast('Notes cleared')}};renderNotes();
+
+// Focus timer
+let seconds=1500,timer=null;function renderTimer(){const m=Math.floor(seconds/60),s=seconds%60;$('#timerTime').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;const pct=(1-seconds/1500)*100;$('#timerRing').style.setProperty('--timer-pct',pct+'%');if(seconds===0){clearInterval(timer);timer=null;toast('Focus session complete 🎯')}}$('#timerStart').onclick=()=>{if(timer)return;timer=setInterval(()=>{seconds=Math.max(0,seconds-1);renderTimer();},1000)};$('#timerPause').onclick=()=>{clearInterval(timer);timer=null};$('#timerReset').onclick=()=>{clearInterval(timer);timer=null;seconds=1500;renderTimer()};renderTimer();
+
+// Cheat sheet search + category
+let sheetCat='all';function filterSheet(){const q=$('#sheetSearch').value.toLowerCase();let shown=0;$$('#sheetTable tbody tr').forEach(r=>{const cat=r.dataset.cat;const hit=r.innerText.toLowerCase().includes(q);const ok=(sheetCat==='all'||cat===sheetCat)&&hit;r.style.display=ok?'':'none';if(ok)shown++});$('#rowCount').textContent=`${shown} visible / ${document.querySelectorAll('#sheetTable tbody tr').length} rules`}
+$('#sheetSearch').oninput=filterSheet;$$('.sheet-filter').forEach(b=>b.onclick=()=>{$$('.sheet-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');sheetCat=b.dataset.cat;filterSheet()});filterSheet();
+
+// Final UI + learning features
+function openModal(id){const m=$('#'+id);if(!m)return;m.classList.remove('hidden');if(id==='paletteModal'){$('#paletteInput').value='';renderPalette('');setTimeout(()=>$('#paletteInput').focus(),30)}}
+function closeAllModals(){$$('.modal-backdrop').forEach(m=>m.classList.add('hidden'))}
+$$('[data-close-modal]').forEach(b=>b.onclick=closeAllModals);$$('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.add('hidden')}));
+const paletteItems=[['Materi','Buka 8 section materi','#materi'],['Math Lab','Kalkulator interaktif','#lab'],['Graph Playground','Eksplorasi grafik','#graph'],['Quiz Battle','10 soal kuis','#quiz'],['Flashcard Arena','20 kartu spaced recall','#flash'],['Study Notes','Catatan & Focus Timer','#notes'],['Study Cockpit','Progres & target harian','#cockpit'],['Concept Trainer','Soal aktif + langkah','#trainer'],['Speed Drill','60 detik pattern drill','#speed'],['Exam Mode','15 soal ujian','#exam'],['Mistake Vault','Review kesalahan','#vault'],['Formula Match','Pasangkan rumus','#vault'],['Study Lens','Decoder + self-explain','#reading'],['Cheat Sheet','Cari 30+ aturan','#cheat']];
+function renderPalette(q=''){const box=$('#paletteResults');const v=q.toLowerCase().trim();const list=paletteItems.filter(x=>(x[0]+' '+x[1]).toLowerCase().includes(v));box.innerHTML=list.map((x,i)=>`<div class="palette-item ${i===0?'active':''}" data-palette-target="${x[2]}"><b>${x[0]}</b><div class="mini">${x[1]}</div></div>`).join('')||'<div class="empty-state">Tidak ketemu. Coba kata seperti “flash”, “exam”, atau “graph”.</div>';box.querySelectorAll('[data-palette-target]').forEach(el=>el.onclick=()=>{closeAllModals();document.querySelector(el.dataset.paletteTarget)?.scrollIntoView({behavior:'smooth'});toast('Jumped ✦')})}
+$('#paletteBtn').onclick=()=>openModal('paletteModal');$('#dockPalette').onclick=()=>openModal('paletteModal');$('#helpBtn').onclick=()=>openModal('helpModal');$('#dockHelp').onclick=()=>openModal('helpModal');$('#dockTop').onclick=()=>scrollTo({top:0,behavior:'smooth'});$('#paletteInput').oninput=e=>renderPalette(e.target.value);
+$('#zenToggle').onclick=()=>{document.body.classList.toggle('zen-mode');$('#zenToggle').textContent=document.body.classList.contains('zen-mode')?'Exit Zen':'Zen Mode'};
+$('#densityToggle').onclick=()=>{document.body.classList.toggle('compact');$('#densityToggle').textContent=document.body.classList.contains('compact')?'Comfort UI':'Compact UI'};
+// Replace the old Focus button with Zen mode behavior while keeping its id.
+$('#focusScroll').onclick=()=>$('#zenToggle').click();
+$('#surpriseBtn').onclick=()=>{const ids=['#lesson-'+(Math.floor(Math.random()*8)+1),'#lab','#graph','#quiz','#flash','#trainer','#speed','#exam','#vault','#reading'];const target=ids[Math.floor(Math.random()*ids.length)];$(target)?.scrollIntoView({behavior:'smooth'});toast('Surprise route unlocked ✦')};
+$('#logSession').onclick=()=>{store.set('studySessions',num('studySessions',0)+1);markStudyDay();toast('Study session logged ✦');updateProgress()};
+$$('.studyGoal').forEach(c=>c.onchange=()=>{const g=getStudyGoalState();g[c.dataset.goal]=c.checked;store.set('studyGoals',g);markStudyDay();updateGoals();if(c.checked)toast('Daily target updated ✓');});
+// Active TOC + reading bar + pointer glow
+const lessonLinks=$$('.toc a');const lessonObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){lessonLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-20% 0px -65%'});$$('.lesson').forEach(x=>lessonObs.observe(x));
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-innerHeight,pct=h>0?(scrollY/h*100):0;$('#readProgress').style.width=pct+'%';$('#backTop').classList.toggle('show',scrollY>500)},{passive:true});
+window.addEventListener('pointermove',e=>{document.documentElement.style.setProperty('--mx',e.clientX+'px');document.documentElement.style.setProperty('--my',e.clientY+'px')},{passive:true});
+
+// Concept Trainer
+const trainerBank=[
+ {topic:'EXPONENT',q:'Selesaikan \\(2^{x+1}=8\\). Tentukan \\(x\\).',a:['2'],hint:'Ubah 8 menjadi pangkat 2.',steps:['\\(8=2^3\\).','\\(2^{x+1}=2^3\\) → pangkat sama.','\\(x+1=3\\Rightarrow x=2\\).']},
+ {topic:'EXPONENT',q:'Sederhanakan \\(2^3\\cdot2^4\\).',a:['128','2^7'],hint:'Basis sama → pangkat dijumlahkan.',steps:['Pangkat: \\(3+4=7\\).','Bentuk: \\(2^7\\).','Nilai: \\(128\\).']},
+ {topic:'ROOTS',q:'Sederhanakan \\(\\sqrt{72}\\).',a:['6√2','6sqrt2'],hint:'Cari kuadrat sempurna terbesar di dalam 72.',steps:['\\(72=36\\cdot2\\).','\\(\\sqrt{72}=\\sqrt{36}\\sqrt2\\).','Hasil: \\(6\\sqrt2\\).']},
+ {topic:'LOGARITHM',q:'Hitung \\(\\log_3 27+\\log_3\\sqrt3\\).',a:['7/2','3.5'],hint:'Ubah 27 menjadi \\(3^3\\) dan \\(\\sqrt3\\) menjadi \\(3^{1/2}\\).',steps:['\\(\\log_3 27=3\\).','\\(\\log_3\\sqrt3=\\frac12\\).','\\(3+\\frac12=\\frac72\\).']},
+ {topic:'LOGARITHM',q:'Jika \\(\\log2=p\\), tuliskan \\(\\log8\\) dalam \\(p\\).',a:['3p','3*p'],hint:'8 adalah 2 pangkat berapa?',steps:['\\(8=2^3\\).','Gunakan \\(\\log(a^k)=k\\log a\\).','\\(\\log8=3\\log2=3p\\).']},
+ {topic:'LOGARITHM',q:'Tentukan syarat argumen pada \\(\\log_a(x-4)\\).',a:['x>4'],hint:'Argumen log real harus positif.',steps:['Argumen: \\(x-4\\).','Syarat: \\(x-4>0\\).','Jadi: \\(x>4\\).']}
+];
+let trainerIdx=0,trainerCorrect=0;
+function renderTrainer(){const t=trainerBank[trainerIdx];$('#trainerTopic').textContent=t.topic;$('#trainerProblem').innerHTML=t.q;$('#trainerAnswer').value='';$('#trainerResult').className='result';$('#trainerResult').textContent='Belum dijawab.';$('#trainerHint').textContent='Hint ①';$('#trainerSteps').innerHTML='';renderMath($('#trainerProblem'));}
+function normAnswer(v){return v.toLowerCase().replace(/\s+/g,'').replace(/,/g,'.')}
+function checkTrainer(){const t=trainerBank[trainerIdx],v=normAnswer($('#trainerAnswer').value),ok=t.a.map(normAnswer).includes(v);if(ok){trainerCorrect++;store.set('trainerCorrect',trainerCorrect);markStudyDay();$('#trainerResult').className='result';$('#trainerResult').textContent='✓ Benar. Polanya sudah kebaca.';$('#trainerSteps').innerHTML=t.steps.map((s,i)=>`<div class="step-card"><b>${i+1}</b><br>${s}</div>`).join('');renderMath($('#trainerSteps'));toast('Trainer cleared ✦')}else{$('#trainerResult').className='result bad';$('#trainerResult').textContent='✗ Belum pas. Coba hint atau pecah menjadi langkah kecil.';addMistake('Concept Trainer',t.q,`Jawabanmu: ${$('#trainerAnswer').value||'(kosong)'}`)}$('#trainerStreak').textContent=`${trainerCorrect} correct`;updateProgress()}
+$('#checkTrainer').onclick=checkTrainer;$('#newTrainer').onclick=()=>{trainerIdx=(trainerIdx+1)%trainerBank.length;renderTrainer()};$('#trainerHint').onclick=()=>{const t=trainerBank[trainerIdx];$('#trainerResult').className='result warm';$('#trainerResult').textContent='Hint: '+t.hint;$('#trainerHint').textContent='Hint ②';};$('#trainerReveal').onclick=()=>{const t=trainerBank[trainerIdx];$('#trainerSteps').innerHTML=t.steps.map((s,i)=>`<div class="step-card"><b>${i+1}</b><br>${s}</div>`).join('');renderMath($('#trainerSteps'));$('#trainerResult').textContent='Langkah lengkap dibuka.'};renderTrainer();
+
+// Speed Drill
+const speedBank=[...trainerBank,{topic:'EXPONENT',q:'Hitung \\(3^3\\).',a:['27']},{topic:'LOGARITHM',q:'Hitung \\(\\log_2 32\\).',a:['5']},{topic:'ROOTS',q:'Sederhanakan \\(\\sqrt{27}\\).',a:['3√3','3sqrt3']}];let speedIdx=0,speedRunning=false,speedLeft=60,speedTimer=null,speedCorrect=0;
+function renderSpeed(){const q=speedBank[speedIdx];$('#speedTopic').textContent=q.topic;$('#speedPrompt').innerHTML=q.q;$('#speedInput').value='';renderMath($('#speedPrompt'))}
+function startSpeed(){if(speedRunning)return;speedRunning=true;speedLeft=60;speedCorrect=0;$('#speedScore').textContent='0 correct';clearInterval(speedTimer);speedTimer=setInterval(()=>{speedLeft--;$('#speedTimer').textContent=speedLeft;$('#speedBar').style.width=((60-speedLeft)/60*100)+'%';if(speedLeft<=0){clearInterval(speedTimer);speedRunning=false;store.set('speedBest',Math.max(num('speedBest',0),speedCorrect));$('#speedResult').textContent=`Waktu habis. Benar: ${speedCorrect}.`;toast('Speed drill complete 🎯');updateProgress()}},1000);speedIdx=Math.floor(Math.random()*speedBank.length);renderSpeed();$('#speedResult').textContent='Go!'}
+function checkSpeed(){if(!speedRunning)return $('#speedResult').textContent='Tekan Start dulu.';const q=speedBank[speedIdx],ok=q.a.map(normAnswer).includes(normAnswer($('#speedInput').value));if(ok){speedCorrect++;$('#speedScore').textContent=`${speedCorrect} correct`;$('#speedResult').className='result';$('#speedResult').textContent='✓ Correct';speedIdx=Math.floor(Math.random()*speedBank.length);renderSpeed();}else{$('#speedResult').className='result bad';$('#speedResult').textContent='✗ Coba lagi atau Skip.'}}
+$('#speedStart').onclick=startSpeed;$('#speedCheck').onclick=checkSpeed;$('#speedNext').onclick=()=>{if(!speedRunning)return;speedIdx=Math.floor(Math.random()*speedBank.length);$('#speedResult').className='result';$('#speedResult').textContent='Skipped';renderSpeed()};renderSpeed();
+
+// Exam Mode
+const examBank=[...quizBank,{q:'Nilai \\(\\log_4 16\\) adalah ...',o:['2','3','4','8'],a:0,e:'\\(4^2=16\\).'}, {q:'Jika \\(a^2=25\\) dan \\(a>0\\), maka \\(a=...\\)',o:['-5','0','5','25'],a:2,e:'Basis positif memberi \\(a=5\\).'}, {q:'Jika \\(\\log_5(x)=2\\), maka \\(x=...\\)',o:['7','10','25','32'],a:2,e:'\\(5^2=25\\).'}, {q:'Bentuk \\(a^{-2}\\) setara dengan ...',o:['\\(a^2\\)','\\(1/a^2\\)','\\(-a^2\\)','\\(2/a\\)'],a:1,e:'Pangkat negatif menjadi kebalikan.'}, {q:'Bentuk \\(\\log_2 8\\) setara dengan ...',o:['\\(2^8\\)','\\(8^2\\)','3','4'],a:2,e:'\\(2^3=8\\).'}];
+let examOrder=[],examPos=0,examAnswers={},examStarted=false,examSeconds=900,examTimerHandle=null,examSubmitted=false;
+function setupExam(){examOrder=[...Array(examBank.length).keys()].sort(()=>Math.random()-.5).slice(0,15);examPos=0;examAnswers={};examSubmitted=false;examSeconds=900;examStarted=true;clearInterval(examTimerHandle);examTimerHandle=setInterval(()=>{if(!examStarted)return;examSeconds=Math.max(0,examSeconds-1);renderExamTimer();if(examSeconds===0)submitExam()},1000);renderExamDots();renderExam();renderExamTimer();$('#examStatus').textContent='IN PROGRESS';$('#examResult').textContent='Pilih jawaban, lalu lanjut.'}
+function renderExamTimer(){const m=Math.floor(examSeconds/60),s=examSeconds%60;$('#examTimer').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`}
+function renderExamDots(){$('#examDots').innerHTML=examOrder.map((_,i)=>`<span class="exam-dot ${i===examPos?'current':''} ${examAnswers[i]!==undefined?'done':''}"></span>`).join('')}
+function renderExam(){if(!examStarted){$('#examQuestion').textContent='Mulai exam untuk melihat soal.';$('#examOptions').innerHTML='';return}const q=examBank[examOrder[examPos]];$('#examIndex').textContent=`Question ${examPos+1} / 15`;$('#examQuestion').innerHTML=q.q;$('#examOptions').innerHTML=q.o.map((o,j)=>`<button class="opt ${examAnswers[examPos]===j?'correct':''}" data-ea="${j}"><span class="letter">${String.fromCharCode(65+j)}</span><span>${o}</span></button>`).join('');$('#examOptions').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(examSubmitted)return;examAnswers[examPos]=+b.dataset.ea;renderExam();renderExamDots()});renderMath($('#examQuestion'));renderMath($('#examOptions'))}
+function submitExam(){if(!examStarted||examSubmitted)return;examSubmitted=true;clearInterval(examTimerHandle);let s=0;examOrder.forEach((idx,i)=>{if(examAnswers[i]===examBank[idx].a)s++});const best=Math.max(num('examBest',0),s);store.set('examBest',best);$('#examScore').textContent=`${s} / 15`;$('#examResult').innerHTML=`Selesai. Skor ronde ini <b>${s}/15</b> · best ${best}/15. Buka Quiz/Trainer untuk review konsep yang meleset.`;$('#examStatus').textContent='SUBMITTED';markStudyDay();updateProgress();toast(`Exam ${s}/15 ✦`)}
+$('#examStart').onclick=setupExam;$('#examPrev').onclick=()=>{if(!examStarted)return;examPos=(examPos-1+examOrder.length)%examOrder.length;renderExam();renderExamDots()};$('#examNext').onclick=()=>{if(!examStarted)return;if(examPos===examOrder.length-1){submitExam();return}examPos++;renderExam();renderExamDots()};$('#examSubmit').onclick=submitExam;$('#examReset').onclick=()=>{clearInterval(examTimerHandle);examStarted=false;examSubmitted=false;examAnswers={};$('#examStatus').textContent='NOT STARTED';$('#examScore').textContent='0 / 15';$('#examResult').textContent='Hasil akan muncul setelah Submit.';renderExam()};renderExam();
+
+// Mistake Vault
+function readMistakes(){const x=store.get('mistakes',[]);return Array.isArray(x)?x:[]}
+function addMistake(source,question,answer){const m=readMistakes();m.unshift({source,question,answer,time:Date.now()});store.set('mistakes',m.slice(0,30));renderMistakes()}
+function renderMistakes(){const list=readMistakes(),box=$('#mistakeList');box.innerHTML=list.length?list.map((m,i)=>`<div class="mistake-item"><b>${escapeHtml(m.source)} · Review ${i+1}</b><div>${m.question}</div><div class="mini" style="margin-top:4px">${escapeHtml(m.answer)} · ${new Date(m.time).toLocaleString('id-ID')}</div></div>`).join(''):'<div class="empty-state">Vault kosong. Salah itu boleh, yang penting kembali lagi dan ngerti kenapa. ✦</div>';renderMath(box)}
+$('#clearMistakes').onclick=()=>{store.set('mistakes',[]);renderMistakes();toast('Vault cleared')};renderMistakes();
+
+// Formula Match
+const matchPairs=[['\\(a^m a^n=a^{m+n}\\)','Basis sama → pangkat ditambah.'],['\\(\\log_a(MN)=\\log_aM+\\log_aN\\)','Perkalian log → tambah.'],['\\(a^0=1\\)','Pangkat nol → satu.'],['\\(\\log_a1=0\\)','Log 1 → nol.']];let matchDeck=[],matchOpen=[],matchMatched=0;
+function newMatch(){matchDeck=[];matchPairs.forEach((p,i)=>{matchDeck.push({id:i,side:0,text:p[0]});matchDeck.push({id:i,side:1,text:p[1]})});matchDeck.sort(()=>Math.random()-.5);matchOpen=[];matchMatched=0;$('#matchStatus').textContent='Cari pasangan yang cocok.';$('#matchBoard').innerHTML=matchDeck.map((c,i)=>`<button class="match-card" data-mi="${i}"><span class="match-content">${c.text}</span></button>`).join('');$('#matchBoard').querySelectorAll('.match-card').forEach(b=>b.onclick=()=>flipMatch(+b.dataset.mi));renderMath($('#matchBoard'))}
+function flipMatch(i){const b=$$('#matchBoard .match-card')[i],c=matchDeck[i];if(!b||b.classList.contains('matched')||matchOpen.some(x=>x.i===i))return;b.classList.add('revealed');matchOpen.push({i,c});renderMath(b);if(matchOpen.length===2){const [a,b2]=matchOpen;if(a.c.id===b2.c.id&&a.c.side!==b2.c.side){a.el=$$('#matchBoard .match-card')[a.i];b2.el=$$('#matchBoard .match-card')[b2.i];a.el.classList.add('matched');b2.el.classList.add('matched');matchMatched++;$('#matchStatus').textContent=`${matchMatched} / 4 pasangan`;matchOpen=[];if(matchMatched===4){toast('Formula Match complete ✦');markStudyDay()}}else{setTimeout(()=>{[a,b2].forEach(x=>$$('#matchBoard .match-card')[x.i]?.classList.remove('revealed'));matchOpen=[]},650)}}}
+$('#newMatch').onclick=newMatch;newMatch();
+
+// Self-explanation + focus timer upgrades
+$('#saveTeach').onclick=()=>{const v=$('#teachBox').value.trim();if(!v)return toast('Tulis penjelasan dulu');store.set('teachExplanation',v);store.set('teachSavedAt',Date.now());markStudyDay();$('#teachStatus').textContent='Saved ✓';toast('Explanation saved ✦')};$('#teachBox').value=store.get('teachExplanation','');
+// Focus timer: keep 25-minute UI but log completed sessions/minutes.
+const oldTimerStart=$('#timerStart').onclick,oldTimerPause=$('#timerPause').onclick,oldTimerReset=$('#timerReset').onclick;
+let focusActive=false,focusStartedAt=0;
+$('#timerStart').onclick=()=>{if(!timer){focusActive=true;focusStartedAt=Date.now();markStudyDay()}if(oldTimerStart)oldTimerStart()};
+$('#timerPause').onclick=()=>{if(timer&&focusActive){store.set('focusMinutes',num('focusMinutes',0)+Math.max(0,Math.floor((Date.now()-focusStartedAt)/60000)));focusActive=false}if(oldTimerPause)oldTimerPause();updateProgress()};
+$('#timerReset').onclick=()=>{if(focusActive&&timer){store.set('focusMinutes',num('focusMinutes',0)+Math.max(0,Math.floor((Date.now()-focusStartedAt)/60000)));focusActive=false}if(oldTimerReset)oldTimerReset();updateProgress()};
+
+function initFinalFeatures(){updateGoals();updateProgress();renderMath(document.body);}
+
+// Back to top
+window.addEventListener('scroll',()=>$('#backTop').classList.toggle('show',scrollY>500));$('#backTop').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+
+// Progress model + analytics
+function num(k,d=0){const n=Number(store.get(k,d));return Number.isFinite(n)?n:d}
+function dateKey(d=new Date()){return d.toISOString().slice(0,10)}
+function computeStreak(){const days=new Set(store.get('studyDays',[]));if(!days.size)return 0;let d=new Date();let streak=0;for(let i=0;i<365;i++){const k=dateKey(d);if(days.has(k)){streak++;d.setDate(d.getDate()-1)}else break}return streak}
+function markStudyDay(){const days=Array.isArray(store.get('studyDays',[]))?store.get('studyDays',[]):[];const today=dateKey();if(!days.includes(today))days.push(today);store.set('studyDays',days.slice(-370));}
+function getStudyGoalState(){const g=store.get('studyGoals',{});return g&&typeof g==='object'&&!Array.isArray(g)?g:{}}
+function updateGoals(){const goals=getStudyGoalState(),done=[1,2,3].filter(i=>!!goals[i]).length;$$('.studyGoal').forEach(c=>c.checked=!!goals[c.dataset.goal]);$('#goalText').textContent=`${done} / 3`;$('#goalBar').style.width=(done/3*100)+'%';}
+function updateProgress(){const checksObj=store.get('checks',{});const c=checksObj&&typeof checksObj==='object'?Object.values(checksObj).filter(Boolean).length:0;const fk=readArray('flashKnown').filter(i=>Number.isInteger(Number(i))).length;const best=num('bestQuiz',0);const examBest=num('examBest',0);const trainerCorrect=num('trainerCorrect',0);const speedBest=num('speedBest',0);const score=(c/8)*.20+(fk/flashcards.length)*.25+(best/10)*.25+(examBest/15)*.15+Math.min(trainerCorrect/10,1)*.10+Math.min(speedBest/10,1)*.05;const pct=Math.round(Math.max(0,Math.min(1,score))*100);$('#progressMetric').textContent=pct+'%';$('#progressBar').style.width=pct+'%';$('#bestScore').textContent=`${best}/10`;$('#flashKnown').textContent=`${fk}/${flashcards.length}`;$('#checksDone').textContent=`${c}/8`;const name=store.get('studentName','');$('#welcomeText').textContent=name?`Halo, ${name}. Progres ini tersimpan lokal di browser kamu.`:'Dashboard ini menghitung checkpoint, flashcard, quiz, exam, dan trainer.';const streak=computeStreak(),sessions=num('studySessions',0),focus=num('focusMinutes',0);$('#streakCount').textContent=streak;$('#sessionCount').textContent=sessions;$('#masteryPct').textContent=pct+'%';$('#focusMins').textContent=focus;$('#heroStreak').textContent=streak;$('#heroSessions').textContent=sessions;$('#heroMastery').textContent=pct+'%';updateGoals();}
+
+// Initial render
+window.addEventListener('load',()=>{setTimeout(()=>{renderMath(document.body);drawGraph();updateProgress();initFinalFeatures()},120)});
+window.addEventListener('resize',()=>{if(window.Plotly)Plotly.Plots.resize('plot')});
+
+// Reset all
+$('#resetAll').onclick=()=>{if(!confirm('Reset semua progres, nama, notes, dan hasil quiz?'))return;['checks','flashKnown','flashAgain','flashOpened','flashLevels','bestQuiz','quizRound','studentName','notes','studySessions','studyDays','studyGoals','trainerCorrect','speedBest','examBest','mistakes','teachExplanation','teachSavedAt','focusMinutes'].forEach(store.del);location.reload()};
+</script>
+</body>
+</html>
